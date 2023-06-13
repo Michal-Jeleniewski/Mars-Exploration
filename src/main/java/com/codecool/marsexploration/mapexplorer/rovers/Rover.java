@@ -34,6 +34,6 @@ public class Rover {
     public void saveResourcePoint(Coordinate coordinate, String resource) {
         List<Coordinate> coordinateList = resourcesPoints.get(resource);
         coordinateList.add(coordinate);
-        resourcesPoints.replace(resource, coordinateList);;
+        resourcesPoints.put(resource, coordinateList);;
     }
 }
