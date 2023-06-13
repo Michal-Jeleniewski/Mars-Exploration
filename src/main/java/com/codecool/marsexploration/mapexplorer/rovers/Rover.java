@@ -14,13 +14,22 @@ public class Rover {
     Map<String, List<Coordinate>> resourcesPoints;
     com.codecool.marsexploration.mapexplorer.maploader.model.Map map;
 
+
+
     public Rover(String id, Coordinate position, int sightRange, Map<String, List<Coordinate>> resourcesPoints, Map map) {
+
         this.id = id;
         this.position = position;
         this.sightRange = sightRange;
         this.resourcesPoints = resourcesPoints;
         this.map = (com.codecool.marsexploration.mapexplorer.maploader.model.Map) map;
     }
+  
+  
+    public List<Coordinate> getResourcesPoints() {
+        return resourcesPoints;
+    }
+
 
     public void checkForResourcesAround(String resource) {
         List<Coordinate> coordinatesToCheck = CoordinateCalculatorService.getCoordinatesAround(position, sightRange);
