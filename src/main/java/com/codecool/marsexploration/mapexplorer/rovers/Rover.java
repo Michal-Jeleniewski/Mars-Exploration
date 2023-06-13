@@ -11,6 +11,10 @@ public class Rover {
     int sightRange;
     List<Coordinate> resourcesPoints;
 
+    public List<Coordinate> getResourcesPoints() {
+        return resourcesPoints;
+    }
+
     public Rover(String id, Coordinate position, int sightRange, List<Coordinate> resourcesPoints) {
         this.id = id;
         this.position = position;
