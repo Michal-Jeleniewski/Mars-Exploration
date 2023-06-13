@@ -1,50 +1,39 @@
 package com.codecool.marsexploration.mapexplorer.rovers;
 
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
+import com.codecool.marsexploration.mapexplorer.service.CoordinateCalculatorService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Rover {
     String id;
     Coordinate position;
     int sightRange;
-    List<Coordinate> resourcesPoints;
+    Map<String, List<Coordinate>> resourcesPoints;
+    com.codecool.marsexploration.mapexplorer.maploader.model.Map map;
 
-    public Rover(String id, Coordinate position, int sightRange, List<Coordinate> resourcesPoints) {
+    public Rover(String id, Coordinate position, int sightRange, Map<String, List<Coordinate>> resourcesPoints, Map map) {
         this.id = id;
         this.position = position;
         this.sightRange = sightRange;
         this.resourcesPoints = resourcesPoints;
+        this.map = (com.codecool.marsexploration.mapexplorer.maploader.model.Map) map;
     }
 
-    public void saveResourcePoint(Coordinate coordinate) {
-        resourcesPoints.add(coordinate);
-    }
+    public void checkForResourcesAround(String resource) {
+        List<Coordinate> coordinatesToCheck = CoordinateCalculatorService.getCoordinatesAround(position, sightRange);
 
-//    public void checkForResourcesAround(Resource resource) {
-//        // brakuje metody czytającej, co znajduje się na danym koordynacie, więc metoda jest niekompletna
-//        for (int linearSight = 0; linearSight < sightRange; linearSight++) {
-//            int diagonalSight = sightRange - linearSight;
-//            List<Coordinate> coordinatesToCheck = new ArrayList<>();
-//            coordinatesToCheck.add(new Coordinate(position.X() + linearSight, position.Y()));
-//            coordinatesToCheck.add(new Coordinate(position.X(), position.Y() + linearSight));
-//            coordinatesToCheck.add(new Coordinate(position.X() - linearSight, position.Y()));
-//            coordinatesToCheck.add(new Coordinate(position.X(), position.Y() - linearSight));
-//            coordinatesToCheck.add(new Coordinate(position.X() + diagonalSight, position.Y() + linearSight));
-//            coordinatesToCheck.add(new Coordinate(position.X() - diagonalSight, position.Y() + linearSight));
-//            coordinatesToCheck.add(new Coordinate(position.X() + diagonalSight, position.Y() - linearSight));
-//            coordinatesToCheck.add(new Coordinate(position.X() - diagonalSight, position.Y() - linearSight));
-//            coordinatesToCheck.add(new Coordinate(position.X() + linearSight, position.Y() + diagonalSight));
-//            coordinatesToCheck.add(new Coordinate(position.X() - linearSight, position.Y() + diagonalSight));
-//            coordinatesToCheck.add(new Coordinate(position.X() + linearSight, position.Y() - diagonalSight));
-//            coordinatesToCheck.add(new Coordinate(position.X() - linearSight, position.Y() - diagonalSight));
-//
-//            coordinatesToCheck.forEach(coordinate -> {
-//                if (metodaSprawdzajaca(coordinate) == resource) {
-//                    resourcesPoints.add(coordinate);
-//                }
-//            });
-//        }
-//    }
+        coordinatesToCheck.forEach(coordinate -> {
+            if (map.getByCoordinate(coordinate).equals(resource)) {
+                saveResourcePoint(coordinate, resource);
+            }
+        });
+    }
+    public void saveResourcePoint(Coordinate coordinate, String resource) {
+        List<Coordinate> coordinateList = resourcesPoints.get(resource);
+        coordinateList.add(coordinate);
+        resourcesPoints.replace(resource, coordinateList);;
+    }
 }

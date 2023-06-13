@@ -24,4 +24,24 @@ public class CoordinateCalculatorService {
         }
         return coordinates;
     }
+
+    public static List<Coordinate> getCoordinatesAround(Coordinate position, int sightRange) {
+        List<Coordinate> coordinatesAround = new ArrayList<>();
+        for (int linearSight = 0; linearSight < sightRange; linearSight++) {
+            int diagonalSight = sightRange - linearSight;
+            coordinatesAround.add(new Coordinate(position.X() + linearSight, position.Y()));
+            coordinatesAround.add(new Coordinate(position.X(), position.Y() + linearSight));
+            coordinatesAround.add(new Coordinate(position.X() - linearSight, position.Y()));
+            coordinatesAround.add(new Coordinate(position.X(), position.Y() - linearSight));
+            coordinatesAround.add(new Coordinate(position.X() + diagonalSight, position.Y() + linearSight));
+            coordinatesAround.add(new Coordinate(position.X() - diagonalSight, position.Y() + linearSight));
+            coordinatesAround.add(new Coordinate(position.X() + diagonalSight, position.Y() - linearSight));
+            coordinatesAround.add(new Coordinate(position.X() - diagonalSight, position.Y() - linearSight));
+            coordinatesAround.add(new Coordinate(position.X() + linearSight, position.Y() + diagonalSight));
+            coordinatesAround.add(new Coordinate(position.X() - linearSight, position.Y() + diagonalSight));
+            coordinatesAround.add(new Coordinate(position.X() + linearSight, position.Y() - diagonalSight));
+            coordinatesAround.add(new Coordinate(position.X() - linearSight, position.Y() - diagonalSight));
+        }
+        return coordinatesAround;
+    }
 }
