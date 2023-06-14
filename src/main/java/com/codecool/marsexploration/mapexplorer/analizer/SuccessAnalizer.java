@@ -3,7 +3,7 @@ package com.codecool.marsexploration.mapexplorer.analizer;
 import com.codecool.marsexploration.mapexplorer.exploration.ExplorationOutcome;
 import com.codecool.marsexploration.mapexplorer.exploration.Simulation;
 
-import java.util.List;
+import java.util.Set;
 
 public class SuccessAnalizer implements OutcomeAnalyzer {
 
@@ -15,7 +15,7 @@ public class SuccessAnalizer implements OutcomeAnalyzer {
 
     @Override
     public ExplorationOutcome analyze(Simulation simulation) {
-        int foundedResources = simulation.rover().getResourcesPoints().values().stream().mapToInt(List::size).sum();
+        int foundedResources = simulation.rover().getResourcesPoints().values().stream().mapToInt(Set::size).sum();
         if (foundedResources >= resourcesToSucsess) {
             return ExplorationOutcome.COLONIZABLE;
         } else return null;

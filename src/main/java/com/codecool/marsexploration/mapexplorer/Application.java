@@ -39,7 +39,7 @@ public class Application {
         RoverPlacement roverPlacement = new RoverPlacement(map, landingSpot);
 
         Coordinate roverPlacementCloseToLandingSpot = roverPlacement.generateCoordinateForRover();
-        List<String> resourcesToMonitor = List.of("%", "&", "*", "#");
+        List<String> resourcesToMonitor = List.of("%", "*");
         int maxSteps = 1000;
 
         String roverId = "rover-1";
@@ -48,7 +48,7 @@ public class Application {
 
         RandomMovementService randomMovementService = new RandomMovementService(rover, map);
 
-        ConfigurationParameters configurationParameters = new ConfigurationParameters(mapFile, spaceshipLandingPoint, resourcesToMonitor, maxSteps);
+        ConfigurationParameters configurationParameters = new ConfigurationParameters(mapFile, landingSpot, resourcesToMonitor, maxSteps);
         ExplorationSimulator explorationSimulator = new ExplorationSimulator(configurationParameters, mapLoader, configurationValidator, roverPlacement, rover, randomMovementService, allOutcomeAnalyzer, logger);
         explorationSimulator.runSimulation(configurationParameters);
     }

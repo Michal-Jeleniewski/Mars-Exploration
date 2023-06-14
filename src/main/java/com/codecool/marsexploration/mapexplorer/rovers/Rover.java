@@ -9,8 +9,7 @@ import java.util.*;
 public class Rover {
     private final List<Coordinate> previousPositions;
     private final String id;
-
-    private final java.util.Map<String, List<Coordinate>> resourcesPoints;
+    private final java.util.Map<String, Set<Coordinate>> resourcesPoints;
     private final Map map;
     private final int sightRange;
     private Coordinate position;
@@ -36,7 +35,7 @@ public class Rover {
     }
 
 
-    public java.util.Map<String, List<Coordinate>> getResourcesPoints() {
+    public java.util.Map<String, Set<Coordinate>> getResourcesPoints() {
         return resourcesPoints;
     }
 
@@ -57,11 +56,12 @@ public class Rover {
     }
 
     public void saveResourcePoint(Coordinate coordinate, String resource) {
-        List<Coordinate> coordinateList;
+        Set<Coordinate> coordinateList;
         if (resourcesPoints.containsKey(resource)) {
             coordinateList = resourcesPoints.get(resource);
         } else {
-            coordinateList = new ArrayList<>();
+            coordinateList = new HashSet<>() {
+            };
         }
         coordinateList.add(coordinate);
         resourcesPoints.put(resource, coordinateList);
