@@ -62,4 +62,7 @@ public class ExplorationSimulator {
     }
 
 
+    public AllOutcomeAnalyzer getAllOutcomeAnalyzer() {
+        return allOutcomeAnalyzer;
+    }
 }

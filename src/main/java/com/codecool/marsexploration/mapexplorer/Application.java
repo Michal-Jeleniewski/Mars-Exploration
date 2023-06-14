@@ -51,7 +51,7 @@ public class Application {
         RandomMovementService randomMovementService = new RandomMovementService(rover, map);
 
         ConfigurationParameters configurationParameters = new ConfigurationParameters(mapFile, spaceshipLandingPoint, resourcesToMonitor, maxSteps);
-        ExplorationSimulator explorationSimulator = new ExplorationSimulator(configurationParameters, mapLoader, configurationValidator, roverPlacement, rover, randomMovementService);
+        ExplorationSimulator explorationSimulator = new ExplorationSimulator(configurationParameters, mapLoader, configurationValidator, roverPlacement, rover, randomMovementService, allOutcomeAnalyzer);
         explorationSimulator.runSimulation(configurationParameters);
     }
 }
