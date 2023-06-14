@@ -1,9 +1,13 @@
 package com.codecool.marsexploration.mapexplorer.exploration;
 
+import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
+import com.codecool.marsexploration.mapexplorer.analizer.OutcomeAnalyzer;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationParameters;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverPlacement;
+
+import java.util.Set;
 
 public class ExplorationSimulator {
 
@@ -15,12 +19,13 @@ public class ExplorationSimulator {
 
     private Rover rover;
 
+    private final AllOutcomeAnalyzer allOutcomeAnalyzer;
 
-    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, RoverPlacement roverPlacement) {
+    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, RoverPlacement roverPlacement, AllOutcomeAnalyzer allOutcomeAnalyzer) {
         this.configurationParameters = configurationParameters;
         this.mapLoader = mapLoader;
         this.roverPlacement = roverPlacement;
-
+        this.allOutcomeAnalyzer = allOutcomeAnalyzer;
     }
 
 
