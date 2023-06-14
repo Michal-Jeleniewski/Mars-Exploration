@@ -1,6 +1,5 @@
 package com.codecool.marsexploration.mapexplorer;
 
-
 import com.codecool.marsexploration.mapexplorer.analizer.*;
 import com.codecool.marsexploration.mapexplorer.configuration.*;
 import com.codecool.marsexploration.mapexplorer.exploration.ExplorationSimulator;
