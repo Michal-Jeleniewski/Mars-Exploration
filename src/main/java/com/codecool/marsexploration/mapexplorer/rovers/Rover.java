@@ -31,7 +31,7 @@ public class Rover {
     }
 
     public void checkForResourcesAround(String resource) {
-        List<Coordinate> coordinatesToCheck = CoordinateCalculatorService.getCoordinatesAround(position, sightRange);
+        List<Coordinate> coordinatesToCheck = CoordinateCalculatorService.getCoordinatesAround(position, sightRange, map.getDimension());
 
         coordinatesToCheck.forEach(coordinate -> {
             if (map.getByCoordinate(coordinate).equals(resource)) {
