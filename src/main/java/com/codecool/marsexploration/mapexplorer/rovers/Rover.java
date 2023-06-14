@@ -17,6 +17,10 @@ public class Rover {
     private Coordinate position;
 
 
+    public List<Coordinate> getPreviousPositions() {
+        return previousPositions;
+    }
+
     public Rover(String id, Coordinate position, int sightRange, Map map) {
         this.id = id;
         this.position = position;
@@ -61,5 +65,9 @@ public class Rover {
 
     public void setPosition(Coordinate position) {
         this.position = position;
+    }
+
+    public String getId() {
+        return id;
     }
 }

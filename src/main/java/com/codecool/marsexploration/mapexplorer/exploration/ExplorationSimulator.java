@@ -12,15 +12,18 @@ import java.util.Set;
 
 public class ExplorationSimulator {
 
-    private final ConfigurationParameters configurationParameters;
-    private final MapLoader mapLoader;
-    private final ConfigurationValidator configurationValidator;
-    private final RoverPlacement roverPlacement;
+    private final AllOutcomeAnalyzer allOutcomeAnalyzer;
+    private ConfigurationParameters configurationParameters;
+    private MapLoader mapLoader;
+    private ConfigurationValidator configurationValidator;
+    private RoverPlacement roverPlacement;
     private Rover rover;
     private RandomMovementService randomMovementService;
 
     private final AllOutcomeAnalyzer allOutcomeAnalyzer;
 
+
+    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService, AllOutcomeAnalyzer allOutcomeAnalyzer) {
 
     public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService, AllOutcomeAnalyzer allOutcomeAnalyzer) {
         this.configurationParameters = configurationParameters;
@@ -30,6 +33,7 @@ public class ExplorationSimulator {
         this.allOutcomeAnalyzer = allOutcomeAnalyzer;
         this.rover = rover;
         this.randomMovementService = randomMovementService;
+
     }
 
     public void runSimulation(ConfigurationParameters configurationParameters) {
@@ -66,4 +70,7 @@ public class ExplorationSimulator {
     }
 
 
+    public AllOutcomeAnalyzer getAllOutcomeAnalyzer() {
+        return allOutcomeAnalyzer;
+    }
 }

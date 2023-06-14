@@ -44,7 +44,7 @@ public class CoordinateCalculatorService {
         }
         return coordinatesAround.stream().filter(coordinate ->
                 coordinate.Y() >= 0 && coordinate.Y() < dimension &&
-                        coordinate.X() >= 0 && coordinate.X() < dimension
-        ).toList();
+                coordinate.X() >= 0 && coordinate.X() < dimension)
+                .toList();
     }
 }
