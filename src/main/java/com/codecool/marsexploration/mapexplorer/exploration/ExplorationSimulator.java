@@ -1,14 +1,12 @@
 package com.codecool.marsexploration.mapexplorer.exploration;
 
 import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
-import com.codecool.marsexploration.mapexplorer.analizer.OutcomeAnalyzer;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationParameters;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationValidator;
+import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverPlacement;
-
-import java.util.Set;
 
 public class ExplorationSimulator {
 
@@ -20,7 +18,9 @@ public class ExplorationSimulator {
     private Rover rover;
     private RandomMovementService randomMovementService;
 
-    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService, AllOutcomeAnalyzer allOutcomeAnalyzer) {
+    private Logger logger;
+
+    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService, AllOutcomeAnalyzer allOutcomeAnalyzer, Logger logger) {
         this.configurationParameters = configurationParameters;
         this.mapLoader = mapLoader;
         this.configurationValidator = configurationValidator;
@@ -28,12 +28,14 @@ public class ExplorationSimulator {
         this.allOutcomeAnalyzer = allOutcomeAnalyzer;
         this.rover = rover;
         this.randomMovementService = randomMovementService;
+        this.logger = logger;
     }
 
     public void runSimulation(ConfigurationParameters configurationParameters) {
         Simulation simulation = new Simulation(0, configurationParameters.maxSteps(), rover,
                 configurationParameters.spaceshipLandingPoint(),
                 mapLoader.load(configurationParameters.mapPath()), configurationParameters.symbols(), null);
+        SimulationStepsLogging simulationStepsLogging = new SimulationStepsLogging(simulation, logger, allOutcomeAnalyzer);
 
         while (simulation.explorationOutcome() == null && simulation.numberOfSteps() < configurationParameters.maxSteps()) {
             randomMovementService.move();
@@ -47,6 +49,7 @@ public class ExplorationSimulator {
                 simulation.setExplorationOutcome(explorationOutcome);
             }
             System.out.println(simulation.toString());
+            simulationStepsLogging.logSteps();
         }
 
         // IN LOOP

@@ -1,19 +1,18 @@
 package com.codecool.marsexploration.mapexplorer.exploration;
 
+import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
 import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 
 public class SimulationStepsLogging {
-    private final Rover rover;
     private final Simulation simulation;
     private final Logger logger;
-    private final ExplorationSimulator explorationSimulator;
+    private final AllOutcomeAnalyzer allOutcomeAnalyzer;
 
-    public SimulationStepsLogging(Rover rover, Simulation simulation, Logger logger, ExplorationSimulator explorationSimulator) {
-        this.rover = rover;
+    public SimulationStepsLogging(Simulation simulation, Logger logger, AllOutcomeAnalyzer allOutcomeAnalyzer) {
         this.simulation = simulation;
         this.logger = logger;
-        this.explorationSimulator = explorationSimulator;
+        this.allOutcomeAnalyzer = allOutcomeAnalyzer;
     }
 
     public void logSteps() {
@@ -21,14 +20,14 @@ public class SimulationStepsLogging {
 
         stringBuilder.append("STEP ").append(simulation.numberOfSteps()).append(";");
 
-        if (explorationSimulator.getAllOutcomeAnalyzer() == null) {
-            stringBuilder.append("EVENT position");
+        if (allOutcomeAnalyzer.analyze(simulation) == null) {
+            stringBuilder.append(" EVENT position;");
         } else {
-            stringBuilder.append("EVENT OUTCOME").append(explorationSimulator.getAllOutcomeAnalyzer());
+            stringBuilder.append(" EVENT OUTCOME ").append(allOutcomeAnalyzer.analyze(simulation)).append(";");
         }
 
-        stringBuilder.append("UNIT rover-" ).append(simulation.rover().getId());
-        stringBuilder.append("POSITION ").append(simulation.rover().getPosition());
+        stringBuilder.append(" UNIT " ).append(simulation.rover().getId()).append(";");
+        stringBuilder.append(" POSITION ").append(simulation.rover().getPosition()).append(";");
         logger.log(stringBuilder.toString());
     }
 }
