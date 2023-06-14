@@ -13,6 +13,7 @@ public class Rover {
     int sightRange;
     Map<String, List<Coordinate>> resourcesPoints;
     com.codecool.marsexploration.mapexplorer.maploader.model.Map map;
+    private  final List<Coordinate> previousPositions;
 
 
 
@@ -23,6 +24,7 @@ public class Rover {
         this.sightRange = sightRange;
         this.resourcesPoints = resourcesPoints;
         this.map = (com.codecool.marsexploration.mapexplorer.maploader.model.Map) map;
+        previousPositions = new ArrayList<>();
     }
   
   
@@ -44,5 +46,17 @@ public class Rover {
         List<Coordinate> coordinateList = resourcesPoints.get(resource);
         coordinateList.add(coordinate);
         resourcesPoints.put(resource, coordinateList);;
+    }
+
+    public void addToPreviousPositionsList(Coordinate coordinate) {
+        previousPositions.add(coordinate);
+    }
+
+    public Coordinate getPosition() {
+        return position;
+    }
+
+    public void setPosition(Coordinate position) {
+        this.position = position;
     }
 }
