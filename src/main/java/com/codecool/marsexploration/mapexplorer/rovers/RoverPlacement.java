@@ -2,8 +2,9 @@ package com.codecool.marsexploration.mapexplorer.rovers;
 
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Map;
+import com.codecool.marsexploration.mapexplorer.service.CoordinateCalculatorService;
 
-import java.util.Random;
+import java.util.List;
 
 public class RoverPlacement {
     private final Map map;
@@ -25,17 +26,10 @@ public class RoverPlacement {
     }
 
     private Coordinate findEmptyNeighboringCoordinate() {
-        int spaceshipX = spaceshipCoordinate.X();
-        int spaceshipY = spaceshipCoordinate.Y();
 
-        Coordinate[] neighboringCoordinates = {
-                new Coordinate(spaceshipX, spaceshipY + 1),
-                new Coordinate(spaceshipX, spaceshipY - 1),
-                new Coordinate(spaceshipX + 1, spaceshipY),
-                new Coordinate(spaceshipX - 1, spaceshipY)
-        };
+        List<Coordinate> adjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(spaceshipCoordinate, map.getDimension());
 
-        for (Coordinate coordinate : neighboringCoordinates) {
+        for (Coordinate coordinate : adjacentCoordinates) {
             if (map.isEmpty(coordinate)) {
                 return coordinate;
             }
