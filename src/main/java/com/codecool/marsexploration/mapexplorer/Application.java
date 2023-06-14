@@ -27,20 +27,17 @@ public class Application {
         Logger logger = new LoggerImpl();
         logger.clearFile();
 
-        ConfigurationParameters configurationParameters = new ConfigurationParameters(mapFile, landingSpot, List.of("%", "*"), 1000);
-
         MapLoader mapLoader = new MapLoaderImpl();
 
         Map map = mapLoader.load(mapFile);
 
         Set<Validator> validators = Set.of(new EmptyLandingSpotValidator(), new FilePathValidator(), new AdjacentCoordinateValidator(), new ResourcesValidator(), new TimeoutValidator());
+        ConfigurationValidator configurationValidator = new ConfigurationValidator(map, validators);
+
         Set<OutcomeAnalyzer> analyzers = Set.of(new SuccessAnalizer(15), new TimeoutAnalizer(), new LackOfResourcesAnalizer(0.7));
         AllOutcomeAnalyzer allOutcomeAnalyzer = new AllOutcomeAnalyzer(analyzers);
 
-        ConfigurationValidator configurationValidator = new ConfigurationValidator(map, validators);
-
         RoverPlacement roverPlacement = new RoverPlacement(map);
-
 
         Coordinate spaceshipLandingPoint = roverPlacement.generateRandomCoordinateForRover();
         List<String> resourcesToMonitor = List.of("%", "&", "*", "#");
@@ -53,7 +50,7 @@ public class Application {
         RandomMovementService randomMovementService = new RandomMovementService(rover, map);
 
         ConfigurationParameters configurationParameters = new ConfigurationParameters(mapFile, spaceshipLandingPoint, resourcesToMonitor, maxSteps);
-        ExplorationSimulator explorationSimulator = new ExplorationSimulator(configurationParameters, mapLoader, configurationValidator, roverPlacement, rover, randomMovementService);
+        ExplorationSimulator explorationSimulator = new ExplorationSimulator(configurationParameters, mapLoader, configurationValidator, roverPlacement, rover, randomMovementService, allOutcomeAnalyzer);
         explorationSimulator.runSimulation(configurationParameters);
     }
 }
