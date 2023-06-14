@@ -9,6 +9,7 @@ import com.codecool.marsexploration.mapexplorer.maploader.MapLoaderImpl;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Map;
 
+import java.util.List;
 import java.util.Set;
 
 public class Application {
@@ -20,6 +21,8 @@ public class Application {
 
         Logger logger = new LoggerImpl();
         logger.clearFile();
+
+        ConfigurationParameters configurationParameters = new ConfigurationParameters(mapFile, landingSpot, List.of("%", "*"), 1000);
 
         MapLoader mapLoader = new MapLoaderImpl();
 

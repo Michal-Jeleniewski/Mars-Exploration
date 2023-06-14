@@ -25,7 +25,7 @@ public class CoordinateCalculatorService {
         return coordinates;
     }
 
-    public static List<Coordinate> getCoordinatesAround(Coordinate position, int sightRange) {
+    public static List<Coordinate> getCoordinatesAround(Coordinate position, int sightRange, int dimension) {
         List<Coordinate> coordinatesAround = new ArrayList<>();
         for (int linearSight = 0; linearSight < sightRange; linearSight++) {
             int diagonalSight = sightRange - linearSight;
@@ -42,6 +42,9 @@ public class CoordinateCalculatorService {
             coordinatesAround.add(new Coordinate(position.X() + linearSight, position.Y() - diagonalSight));
             coordinatesAround.add(new Coordinate(position.X() - linearSight, position.Y() - diagonalSight));
         }
-        return coordinatesAround;
+        return coordinatesAround.stream().filter(coordinate ->
+                coordinate.Y() >= 0 && coordinate.Y() < dimension &&
+                coordinate.X() >= 0 && coordinate.X() < dimension)
+                .toList();
     }
 }
