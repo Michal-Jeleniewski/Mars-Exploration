@@ -3,7 +3,8 @@ package com.codecool.marsexploration.mapexplorer;
 import com.codecool.marsexploration.mapexplorer.analizer.*;
 import com.codecool.marsexploration.mapexplorer.configuration.*;
 import com.codecool.marsexploration.mapexplorer.exploration.ExplorationSimulator;
-import com.codecool.marsexploration.mapexplorer.exploration.RandomMovementService;
+import com.codecool.marsexploration.mapexplorer.exploration.MovementService;
+import com.codecool.marsexploration.mapexplorer.exploration.RandomAvoidingRevisitingMovementService;
 import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.logger.LoggerImpl;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
@@ -46,10 +47,10 @@ public class Application {
         int sightRange = 3;
         Rover rover = new Rover(roverId, roverPlacementCloseToLandingSpot, sightRange, map);
 
-        RandomMovementService randomMovementService = new RandomMovementService(rover, map);
+        MovementService movementService = new RandomAvoidingRevisitingMovementService(rover, map);
 
         ConfigurationParameters configurationParameters = new ConfigurationParameters(mapFile, landingSpot, resourcesToMonitor, maxSteps);
-        ExplorationSimulator explorationSimulator = new ExplorationSimulator(configurationParameters, mapLoader, configurationValidator, roverPlacement, rover, randomMovementService, allOutcomeAnalyzer, logger);
+        ExplorationSimulator explorationSimulator = new ExplorationSimulator(configurationParameters, mapLoader, configurationValidator, roverPlacement, rover, movementService, allOutcomeAnalyzer, logger);
         explorationSimulator.runSimulation(configurationParameters);
     }
 }
