@@ -9,10 +9,6 @@ public class Map {
         this.successfullyGenerated = successfullyGenerated;
     }
 
-    public int getDimension() {
-        return representation.length;
-    }
-
     private static String createStringRepresentation(String[][] arr) {
         StringBuilder sb = new StringBuilder();
 
@@ -26,6 +22,14 @@ public class Map {
         }
 
         return sb.toString();
+    }
+
+    public String[][] getRepresentation() {
+        return representation;
+    }
+
+    public int getDimension() {
+        return representation.length;
     }
 
     public String getByCoordinate(Coordinate coordinate) {
