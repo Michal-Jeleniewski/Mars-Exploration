@@ -21,6 +21,7 @@ public class Application {
 
     public static void main(String[] args) {
         String mapFile = workDir + "/resources/exploration-1.map";
+        Coordinate landingSpot = new Coordinate(6, 6);
 
         Logger logger = new LoggerImpl();
         logger.clearFile();
