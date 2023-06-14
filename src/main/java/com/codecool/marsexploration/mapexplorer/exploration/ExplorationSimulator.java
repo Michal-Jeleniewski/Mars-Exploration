@@ -16,18 +16,18 @@ public class ExplorationSimulator {
     private ConfigurationValidator configurationValidator;
     private RoverPlacement roverPlacement;
     private Rover rover;
-    private RandomMovementService randomMovementService;
+    private MovementService movementService;
 
     private Logger logger;
 
-    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService, AllOutcomeAnalyzer allOutcomeAnalyzer, Logger logger) {
+    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, MovementService movementService, AllOutcomeAnalyzer allOutcomeAnalyzer, Logger logger) {
         this.configurationParameters = configurationParameters;
         this.mapLoader = mapLoader;
         this.configurationValidator = configurationValidator;
         this.roverPlacement = roverPlacement;
         this.allOutcomeAnalyzer = allOutcomeAnalyzer;
         this.rover = rover;
-        this.randomMovementService = randomMovementService;
+        this.movementService = movementService;
         this.logger = logger;
     }
 
@@ -38,7 +38,7 @@ public class ExplorationSimulator {
         SimulationStepsLogging simulationStepsLogging = new SimulationStepsLogging(simulation, logger, allOutcomeAnalyzer);
 
         while (simulation.explorationOutcome() == null && simulation.numberOfSteps() < configurationParameters.maxSteps()) {
-            randomMovementService.move();
+            movementService.move();
             configurationParameters.symbols().forEach(symbol -> {
                 rover.checkForResourcesAround(symbol);
             });
@@ -48,7 +48,7 @@ public class ExplorationSimulator {
             if (explorationOutcome != null) {
                 simulation.setExplorationOutcome(explorationOutcome);
             }
-            System.out.println(simulation.toString());
+            System.out.println(simulation);
             simulationStepsLogging.logSteps();
         }
 
