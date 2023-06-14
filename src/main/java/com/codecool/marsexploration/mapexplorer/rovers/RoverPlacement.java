@@ -7,31 +7,41 @@ import java.util.Random;
 
 public class RoverPlacement {
     private final Map map;
+    private final Coordinate spaceshipCoordinate;
 
-    public RoverPlacement(Map map) {
+    public RoverPlacement(Map map, Coordinate spaceshipCoordinate) {
         this.map = map;
+        this.spaceshipCoordinate = spaceshipCoordinate;
     }
 
-    public Coordinate generateRandomCoordinateForRover() {
-        int randomX = generateRandomNumber();
-        int randomY = generateRandomNumber();
+    public Coordinate generateCoordinateForRover() {
+        Coordinate roverCoordinate = findEmptyNeighboringCoordinate();
 
-        Coordinate coordinate = new Coordinate(randomX, randomY);
-
-        while (!map.isEmpty(coordinate)){
-            randomX = generateRandomNumber();
-            randomY = generateRandomNumber();
-            coordinate = new Coordinate(randomX, randomY);
+        while (roverCoordinate == null) {
+            roverCoordinate = findEmptyNeighboringCoordinate();
         }
 
-        return coordinate;
+        return roverCoordinate;
     }
 
-    private int generateRandomNumber() {
-        Random random = new Random();
-        int dimensionOfMap = map.getDimension();
-        int MIN = 0;
-        return random.nextInt(dimensionOfMap - MIN) + MIN;
+    private Coordinate findEmptyNeighboringCoordinate() {
+        int spaceshipX = spaceshipCoordinate.X();
+        int spaceshipY = spaceshipCoordinate.Y();
+
+        Coordinate[] neighboringCoordinates = {
+                new Coordinate(spaceshipX, spaceshipY + 1),
+                new Coordinate(spaceshipX, spaceshipY - 1),
+                new Coordinate(spaceshipX + 1, spaceshipY),
+                new Coordinate(spaceshipX - 1, spaceshipY)
+        };
+
+        for (Coordinate coordinate : neighboringCoordinates) {
+            if (map.isEmpty(coordinate)) {
+                return coordinate;
+            }
+        }
+
+        return null;
     }
 
 }
