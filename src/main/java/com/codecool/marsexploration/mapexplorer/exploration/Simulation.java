@@ -57,14 +57,17 @@ public class Simulation {
 
     @Override
     public String toString() {
-        return "Simulation[" +
-                "numberOfSteps=" + numberOfSteps + ", " +
-                "stepsToTimeout=" + stepsToTimeout + ", " +
+        return "Simulation[\n" +
+                "numberOfSteps=" + numberOfSteps + ",\n " +
+                "stepsToTimeout=" + stepsToTimeout + ",\n " +
                 "rover=" + rover + ", " +
-                "spaceshipCoordinate=" + spaceshipCoordinate + ", " +
-                "map=" + map + ", " +
-                "resourcesToMonitor=" + resourcesToMonitor + ", " +
+                "spaceshipCoordinate=" + spaceshipCoordinate + ",\n " +
+                "map=" + map + ",\n " +
+                "resourcesToMonitor=" + resourcesToMonitor + ",\n " +
                 "explorationOutcome=" + explorationOutcome + ']';
     }
 
+    public void setNumberOfSteps(int numberOfSteps) {
+        this.numberOfSteps = numberOfSteps;
+    }
 }
