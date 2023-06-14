@@ -6,11 +6,9 @@ import com.codecool.marsexploration.mapexplorer.exploration.Simulation;
 import java.util.Set;
 
 public class AllOutcomeAnalyzer {
-
     private final Set<OutcomeAnalyzer> analyzers;
 
-
-    public AllOutcomeAnalyzer(Set<OutcomeAnalyzer> analyzers ) {
+    public AllOutcomeAnalyzer(Set<OutcomeAnalyzer> analyzers) {
         this.analyzers = analyzers;
     }
 

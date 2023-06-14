@@ -1,8 +1,8 @@
 package com.codecool.marsexploration.mapexplorer.maploader.model;
 
 public class Map {
-    private String[][] representation;
-    private boolean successfullyGenerated;
+    private final String[][] representation;
+    private final boolean successfullyGenerated;
 
     public Map(String[][] representation, boolean successfullyGenerated) {
         this.representation = representation;

@@ -4,5 +4,5 @@ public enum ExplorationOutcome {
     ERROR,
     TIMEOUT,
     COLONIZABLE,
-    LACK_OF_RESOURCES;
+    LACK_OF_RESOURCES
 }
