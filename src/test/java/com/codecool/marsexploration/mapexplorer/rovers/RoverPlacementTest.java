@@ -11,12 +11,21 @@ class RoverPlacementTest {
 
     @Test
     public void testGenerateRandomCoordinateForRover(){
-        Map map = new Map(new String[5][5], true);
-        RoverPlacement roverPlacement = new RoverPlacement(map);
-        Coordinate coordinate = roverPlacement.generateRandomCoordinateForRover();
+        String[][] mapData = {
+                {" ", "*", "*", "*", "*"},
+                {"*", "*", " ", "*", "*"},
+                {"*", "*", " ", "*", "*"},
+                {"*", "*", "*", "*", "*"},
+                {"*", "*", "*", "*", "*"}
+        };
+        Map map = new Map(mapData, true);
+        Coordinate spaceshipCoordinate = new Coordinate(2, 2);
+        RoverPlacement roverPlacement = new RoverPlacement(map, spaceshipCoordinate);
+        Coordinate coordinate = roverPlacement.generateCoordinateForRover();
 
         assertNotNull(coordinate);
         assertTrue(coordinate.Y() >= 0 && coordinate.Y() < map.getDimension());
         assertTrue(coordinate.X() >= 0 && coordinate.X() < map.getDimension());
+        assertTrue(map.isEmpty(coordinate));
     }
 }

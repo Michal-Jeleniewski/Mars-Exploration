@@ -36,15 +36,15 @@ public class Application {
         Set<OutcomeAnalyzer> analyzers = Set.of(new SuccessAnalizer(15), new TimeoutAnalizer(), new LackOfResourcesAnalizer(0.7));
         AllOutcomeAnalyzer allOutcomeAnalyzer = new AllOutcomeAnalyzer(analyzers);
 
-        RoverPlacement roverPlacement = new RoverPlacement(map);
+        RoverPlacement roverPlacement = new RoverPlacement(map, landingSpot);
 
-        Coordinate spaceshipLandingPoint = roverPlacement.generateRandomCoordinateForRover();
+        Coordinate roverPlacementCloseToLandingSpot = roverPlacement.generateCoordinateForRover();
         List<String> resourcesToMonitor = List.of("%", "&", "*", "#");
         int maxSteps = 1000;
 
         String roverId = "rover-1";
         int sightRange = 3;
-        Rover rover = new Rover(roverId, spaceshipLandingPoint, sightRange, map);
+        Rover rover = new Rover(roverId, roverPlacementCloseToLandingSpot, sightRange, map);
 
         RandomMovementService randomMovementService = new RandomMovementService(rover, map);
 

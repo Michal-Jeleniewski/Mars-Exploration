@@ -42,6 +42,7 @@ public class ExplorationSimulator {
             configurationParameters.symbols().forEach(symbol -> {
                 rover.checkForResourcesAround(symbol);
             });
+            rover.addScannedCoordinates();
             ExplorationOutcome explorationOutcome = allOutcomeAnalyzer.analyze(simulation);
             simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
             if (explorationOutcome != null) {
