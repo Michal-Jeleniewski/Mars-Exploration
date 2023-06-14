@@ -20,11 +20,6 @@ public class ExplorationSimulator {
     private Rover rover;
     private RandomMovementService randomMovementService;
 
-    private final AllOutcomeAnalyzer allOutcomeAnalyzer;
-
-
-    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService, AllOutcomeAnalyzer allOutcomeAnalyzer) {
-
     public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService, AllOutcomeAnalyzer allOutcomeAnalyzer) {
         this.configurationParameters = configurationParameters;
         this.mapLoader = mapLoader;
@@ -33,7 +28,6 @@ public class ExplorationSimulator {
         this.allOutcomeAnalyzer = allOutcomeAnalyzer;
         this.rover = rover;
         this.randomMovementService = randomMovementService;
-
     }
 
     public void runSimulation(ConfigurationParameters configurationParameters) {
