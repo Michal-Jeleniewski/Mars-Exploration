@@ -3,6 +3,7 @@ package com.codecool.marsexploration.mapexplorer.exploration;
 import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
 import com.codecool.marsexploration.mapexplorer.analizer.OutcomeAnalyzer;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationParameters;
+import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationValidator;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverPlacement;
@@ -14,20 +15,25 @@ public class ExplorationSimulator {
     private ConfigurationParameters configurationParameters;
     private MapLoader mapLoader;
 
-    // dodać Configuration validator
+    private ConfigurationValidator configurationValidator;
     private RoverPlacement roverPlacement;
-
     private Rover rover;
+    private RandomMovementService randomMovementService;
+
 
     private final AllOutcomeAnalyzer allOutcomeAnalyzer;
 
-    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, RoverPlacement roverPlacement, AllOutcomeAnalyzer allOutcomeAnalyzer) {
+
+    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService , AllOutcomeAnalyzer allOutcomeAnalyzer) {
         this.configurationParameters = configurationParameters;
         this.mapLoader = mapLoader;
+        this.configurationValidator = configurationValidator;
         this.roverPlacement = roverPlacement;
         this.allOutcomeAnalyzer = allOutcomeAnalyzer;
-    }
+        this.rover = rover;
+        this.randomMovementService = randomMovementService;
 
+    }
 
     public void runSimulation(ConfigurationParameters configurationParameters) {
         Simulation simulation = new Simulation(0, configurationParameters.maxSteps(), rover,
@@ -35,6 +41,11 @@ public class ExplorationSimulator {
                 mapLoader.load(configurationParameters.mapPath()), configurationParameters.symbols(), null);
 
 
+        for (int i = 0; i < configurationParameters.maxSteps(); i++) {
+            simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
+            randomMovementService.move();
+            System.out.println(simulation.toString());
+        }
         // IN LOOP
 
         //Movement. The rover needs to determine an adjacent empty spot of the chart to move

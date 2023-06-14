@@ -1,23 +1,20 @@
 package com.codecool.marsexploration.mapexplorer.exploration;
 
 
-import com.codecool.marsexploration.mapexplorer.exploration.ExplorationOutcome;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Map;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
-import com.codecool.marsexploration.mapexplorer.rovers.Spaceship;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Simulation {
-    private int numberOfSteps;
     private final int stepsToTimeout;
     private final Rover rover;
     private final Coordinate spaceshipCoordinate;
     private final Map map;
     private final List<String> resourcesToMonitor;
-    private  ExplorationOutcome explorationOutcome;
+    private int numberOfSteps;
+    private ExplorationOutcome explorationOutcome;
 
     public Simulation(int numberOfSteps, int stepsToTimeout, Rover rover, Coordinate spaceshipCoordinate, Map map,
                       List<String> resourcesToMonitor, ExplorationOutcome explorationOutcome) {
@@ -60,14 +57,17 @@ public class Simulation {
 
     @Override
     public String toString() {
-        return "Simulation[" +
-                "numberOfSteps=" + numberOfSteps + ", " +
-                "stepsToTimeout=" + stepsToTimeout + ", " +
+        return "Simulation[\n" +
+                "numberOfSteps=" + numberOfSteps + ",\n " +
+                "stepsToTimeout=" + stepsToTimeout + ",\n " +
                 "rover=" + rover + ", " +
-                "spaceship=" + spaceshipCoordinate + ", " +
-                "map=" + map + ", " +
-                "resourcesToMonitor=" + resourcesToMonitor + ", " +
+                "spaceshipCoordinate=" + spaceshipCoordinate + ",\n " +
+                "map=" + map + ",\n " +
+                "resourcesToMonitor=" + resourcesToMonitor + ",\n " +
                 "explorationOutcome=" + explorationOutcome + ']';
     }
 
+    public void setNumberOfSteps(int numberOfSteps) {
+        this.numberOfSteps = numberOfSteps;
+    }
 }
