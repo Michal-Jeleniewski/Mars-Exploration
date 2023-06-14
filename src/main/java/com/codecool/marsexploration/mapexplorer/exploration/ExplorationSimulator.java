@@ -12,19 +12,17 @@ import java.util.Set;
 
 public class ExplorationSimulator {
 
-    private ConfigurationParameters configurationParameters;
-    private MapLoader mapLoader;
-
-    private ConfigurationValidator configurationValidator;
-    private RoverPlacement roverPlacement;
+    private final ConfigurationParameters configurationParameters;
+    private final MapLoader mapLoader;
+    private final ConfigurationValidator configurationValidator;
+    private final RoverPlacement roverPlacement;
     private Rover rover;
     private RandomMovementService randomMovementService;
-
 
     private final AllOutcomeAnalyzer allOutcomeAnalyzer;
 
 
-    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService , AllOutcomeAnalyzer allOutcomeAnalyzer) {
+    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService, AllOutcomeAnalyzer allOutcomeAnalyzer) {
         this.configurationParameters = configurationParameters;
         this.mapLoader = mapLoader;
         this.configurationValidator = configurationValidator;
@@ -32,7 +30,6 @@ public class ExplorationSimulator {
         this.allOutcomeAnalyzer = allOutcomeAnalyzer;
         this.rover = rover;
         this.randomMovementService = randomMovementService;
-
     }
 
     public void runSimulation(ConfigurationParameters configurationParameters) {
@@ -40,12 +37,19 @@ public class ExplorationSimulator {
                 configurationParameters.spaceshipLandingPoint(),
                 mapLoader.load(configurationParameters.mapPath()), configurationParameters.symbols(), null);
 
-
-        for (int i = 0; i < configurationParameters.maxSteps(); i++) {
-            simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
+        while (simulation.explorationOutcome() == null && simulation.numberOfSteps() < configurationParameters.maxSteps()) {
             randomMovementService.move();
+            configurationParameters.symbols().forEach(symbol -> {
+                rover.checkForResourcesAround(symbol);
+            });
+            ExplorationOutcome explorationOutcome = allOutcomeAnalyzer.analyze(simulation);
+            simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
+            if (explorationOutcome != null) {
+                simulation.setExplorationOutcome(explorationOutcome);
+            }
             System.out.println(simulation.toString());
         }
+
         // IN LOOP
 
         //Movement. The rover needs to determine an adjacent empty spot of the chart to move

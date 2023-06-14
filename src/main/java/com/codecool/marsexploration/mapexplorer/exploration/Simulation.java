@@ -70,4 +70,8 @@ public class Simulation {
     public void setNumberOfSteps(int numberOfSteps) {
         this.numberOfSteps = numberOfSteps;
     }
+
+    public void setExplorationOutcome(ExplorationOutcome explorationOutcome) {
+        this.explorationOutcome = explorationOutcome;
+    }
 }
