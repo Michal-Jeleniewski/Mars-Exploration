@@ -24,12 +24,11 @@ public class Rover {
         this.resourcesPoints = resourcesPoints;
         this.map = (com.codecool.marsexploration.mapexplorer.maploader.model.Map) map;
     }
-  
-  
-    public List<Coordinate> getResourcesPoints() {
+
+
+    public Map<String, List<Coordinate>> getResourcesPoints() {
         return resourcesPoints;
     }
-
 
     public void checkForResourcesAround(String resource) {
         List<Coordinate> coordinatesToCheck = CoordinateCalculatorService.getCoordinatesAround(position, sightRange);

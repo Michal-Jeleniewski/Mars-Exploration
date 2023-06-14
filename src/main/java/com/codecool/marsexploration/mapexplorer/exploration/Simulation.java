@@ -64,7 +64,7 @@ public class Simulation {
                 "numberOfSteps=" + numberOfSteps + ", " +
                 "stepsToTimeout=" + stepsToTimeout + ", " +
                 "rover=" + rover + ", " +
-                "spaceship=" + spaceship + ", " +
+                "spaceship=" + spaceshipCoordinate + ", " +
                 "map=" + map + ", " +
                 "resourcesToMonitor=" + resourcesToMonitor + ", " +
                 "explorationOutcome=" + explorationOutcome + ']';
