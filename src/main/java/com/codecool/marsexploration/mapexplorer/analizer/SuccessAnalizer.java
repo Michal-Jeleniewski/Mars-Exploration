@@ -12,7 +12,7 @@ public class SuccessAnalizer implements OutcomeAnalyzer {
     }
 
     @Override
-    public ExplorationOutcome analize(Simulation simulation) {
+    public ExplorationOutcome analyze(Simulation simulation) {
         if (simulation.rover().getResourcesPoints().size() >= resourcesToSucsess) {
             return ExplorationOutcome.COLONIZABLE;
         } else return null;

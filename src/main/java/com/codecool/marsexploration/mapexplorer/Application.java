@@ -1,6 +1,7 @@
 package com.codecool.marsexploration.mapexplorer;
 
 
+import com.codecool.marsexploration.mapexplorer.analizer.*;
 import com.codecool.marsexploration.mapexplorer.configuration.*;
 import com.codecool.marsexploration.mapexplorer.exploration.ExplorationSimulator;
 import com.codecool.marsexploration.mapexplorer.exploration.RandomMovementService;
@@ -31,6 +32,8 @@ public class Application {
         Map map = mapLoader.load(mapFile);
 
         Set<Validator> validators = Set.of(new EmptyLandingSpotValidator(), new FilePathValidator(), new AdjacentCoordinateValidator(), new ResourcesValidator(), new TimeoutValidator());
+        Set<OutcomeAnalyzer> analyzers = Set.of(new SuccessAnalizer(15), new TimeoutAnalizer(), new LackOfResourcesAnalizer(0.7));
+        AllOutcomeAnalyzer allOutcomeAnalyzer = new AllOutcomeAnalyzer(analyzers);
 
         ConfigurationValidator configurationValidator = new ConfigurationValidator(map, validators);
 

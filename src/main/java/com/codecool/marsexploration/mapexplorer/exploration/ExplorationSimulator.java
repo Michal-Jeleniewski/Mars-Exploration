@@ -1,10 +1,14 @@
 package com.codecool.marsexploration.mapexplorer.exploration;
 
+import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
+import com.codecool.marsexploration.mapexplorer.analizer.OutcomeAnalyzer;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationParameters;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationValidator;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverPlacement;
+
+import java.util.Set;
 
 public class ExplorationSimulator {
 
@@ -16,13 +20,19 @@ public class ExplorationSimulator {
     private Rover rover;
     private RandomMovementService randomMovementService;
 
-    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService) {
+
+    private final AllOutcomeAnalyzer allOutcomeAnalyzer;
+
+
+    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, RandomMovementService randomMovementService , AllOutcomeAnalyzer allOutcomeAnalyzer) {
         this.configurationParameters = configurationParameters;
         this.mapLoader = mapLoader;
         this.configurationValidator = configurationValidator;
         this.roverPlacement = roverPlacement;
+        this.allOutcomeAnalyzer = allOutcomeAnalyzer;
         this.rover = rover;
         this.randomMovementService = randomMovementService;
+
     }
 
     public void runSimulation(ConfigurationParameters configurationParameters) {

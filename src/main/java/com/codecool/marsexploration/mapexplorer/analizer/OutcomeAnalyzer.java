@@ -8,5 +8,5 @@ import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 
 public interface OutcomeAnalyzer {
 
-     ExplorationOutcome analize(Simulation simulation );
+     ExplorationOutcome analyze(Simulation simulation );
 }
