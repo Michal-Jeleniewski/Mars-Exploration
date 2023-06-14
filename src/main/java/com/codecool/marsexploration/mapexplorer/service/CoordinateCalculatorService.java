@@ -41,11 +41,10 @@ public class CoordinateCalculatorService {
             coordinatesAround.add(new Coordinate(position.X() - linearSight, position.Y() + diagonalSight));
             coordinatesAround.add(new Coordinate(position.X() + linearSight, position.Y() - diagonalSight));
             coordinatesAround.add(new Coordinate(position.X() - linearSight, position.Y() - diagonalSight));
-            coordinatesAround.stream().filter(coordinate ->
-                    coordinate.Y() >= 0 && coordinate.Y() < dimension &&
-                            coordinate.X() >= 0 && coordinate.X() < dimension
-            );
         }
-        return coordinatesAround;
+        return coordinatesAround.stream().filter(coordinate ->
+                coordinate.Y() >= 0 && coordinate.Y() < dimension &&
+                        coordinate.X() >= 0 && coordinate.X() < dimension
+        ).toList();
     }
 }

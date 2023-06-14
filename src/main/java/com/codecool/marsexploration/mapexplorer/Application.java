@@ -28,7 +28,6 @@ public class Application {
         Set<Validator> validators = Set.of(new EmptyLandingSpotValidator(), new FilePathValidator(), new AdjacentCoordinateValidator(), new ResourcesValidator(), new TimeoutValidator());
 
         ConfigurationValidator configurationValidator = new ConfigurationValidator(map, validators);
-
     }
 }
 
