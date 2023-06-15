@@ -7,6 +7,12 @@ import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Set;
+
 public class ExplorationSimulator {
 
     private final ExplorationResultDisplay explorationResultDisplay;
@@ -48,7 +54,10 @@ public class ExplorationSimulator {
             rover.addScannedCoordinates();
 
             ExplorationOutcome explorationOutcome = allOutcomeAnalyzer.analyze(simulation);
+
             if (explorationOutcome != null) {
+                int numberOfResources = rover.getObjectsPoints().values().stream().mapToInt(Set::size).sum();
+                saveInDatabase(simulation.numberOfSteps(), numberOfResources, explorationOutcome);
                 simulation.setExplorationOutcome(explorationOutcome);
             }
 
@@ -56,21 +65,25 @@ public class ExplorationSimulator {
 
             simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
         }
-
         explorationResultDisplay.displayExploredMap(rover);
+    }
 
-        // IN LOOP
+    public void saveInDatabase(int steps, int numberOfResources, ExplorationOutcome explorationOutcome){
+        String DB_URL = "jdbc:mysql:src/main/resources/exploration.db";
+        String DB_USER = "root";
+        String DB_PASSWORD = "password";
+            try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String query = "INSERT INTO Explorations (steps, resouces, outcome) VALUES (?, ?, ?)";
 
-        //Movement. The rover needs to determine an adjacent empty spot of the chart to move
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
 
-        // Scanning. The rover needs to scan the area for resources based on how far it can see (its sight).
-
-        // Analysis. After the information is gathered, you need to determine whether an outcome is reached.
-
-        // Log. Write the current state of events in the simulation to the log file.
-
-        // Step increment. Increment the context step variable by one.
-
-
+                preparedStatement.setInt(1, steps);
+                preparedStatement.setInt(2, numberOfResources);
+                preparedStatement.setString(3, String.valueOf(explorationOutcome));
+                preparedStatement.executeUpdate();
+                System.out.println("Exploration data added to database");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
     }
 }
