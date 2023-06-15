@@ -56,7 +56,7 @@ public class Application {
 
         ExplorationResultDisplay explorationResultDisplay = new ExplorationResultDisplay(map.getDimension());
 
-        ExplorationSimulator explorationSimulator = new ExplorationSimulator(explorationResultDisplay, mapLoader, movementService, allOutcomeAnalyzer, logger);
+        ExplorationSimulator explorationSimulator = new ExplorationSimulator(explorationResultDisplay, mapLoader, configurationValidator, movementService, allOutcomeAnalyzer, logger);
 
         if (configurationValidator.validate(configurationParameters)) {
             System.out.println("Configuration validation successful. Starting simulation.");
