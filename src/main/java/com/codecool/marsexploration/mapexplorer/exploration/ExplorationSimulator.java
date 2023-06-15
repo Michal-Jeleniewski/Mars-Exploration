@@ -11,20 +11,17 @@ public class ExplorationSimulator {
 
     private final ExplorationResultDisplay explorationResultDisplay;
     private final MapLoader mapLoader;
-    private final ConfigurationValidator configurationValidator;
     private final AllOutcomeAnalyzer allOutcomeAnalyzer;
     private final MovementService movementService;
     private final Logger logger;
 
     public ExplorationSimulator(ExplorationResultDisplay explorationResultDisplay,
                                 MapLoader mapLoader,
-                                ConfigurationValidator configurationValidator,
                                 MovementService movementService,
                                 AllOutcomeAnalyzer allOutcomeAnalyzer,
                                 Logger logger) {
         this.explorationResultDisplay = explorationResultDisplay;
         this.mapLoader = mapLoader;
-        this.configurationValidator = configurationValidator;
         this.movementService = movementService;
         this.allOutcomeAnalyzer = allOutcomeAnalyzer;
         this.logger = logger;
@@ -58,19 +55,5 @@ public class ExplorationSimulator {
         }
 
         explorationResultDisplay.displayExploredMap(rover);
-
-        // IN LOOP
-
-        //Movement. The rover needs to determine an adjacent empty spot of the chart to move
-
-        // Scanning. The rover needs to scan the area for resources based on how far it can see (its sight).
-
-        // Analysis. After the information is gathered, you need to determine whether an outcome is reached.
-
-        // Log. Write the current state of events in the simulation to the log file.
-
-        // Step increment. Increment the context step variable by one.
-
-
     }
 }
