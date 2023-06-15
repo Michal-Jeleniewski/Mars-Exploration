@@ -7,10 +7,7 @@ import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Set;
 
 public class ExplorationSimulator {
@@ -68,22 +65,29 @@ public class ExplorationSimulator {
         explorationResultDisplay.displayExploredMap(rover);
     }
 
-    public void saveInDatabase(int steps, int numberOfResources, ExplorationOutcome explorationOutcome){
+    public void saveInDatabase(int steps, int numberOfResources, ExplorationOutcome explorationOutcome) {
         String DB_URL = "jdbc:sqlite:src/main/resources/exploration.db";
-        String DB_USER = "root";
-        String DB_PASSWORD = "password";
-            try (Connection connection = DriverManager.getConnection(DB_URL)) {
-                String query = "INSERT INTO Explorations (steps, resources, outcome) VALUES (?, ?, ?)";
-
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-                preparedStatement.setInt(1, steps);
-                preparedStatement.setInt(2, numberOfResources);
-                preparedStatement.setString(3, String.valueOf(explorationOutcome));
-                preparedStatement.executeUpdate();
-                System.out.println("Exploration data added to database");
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try (Connection connection = DriverManager.getConnection(DB_URL)) {
+            Statement statement = connection.createStatement();
+            if (!tableExists(connection, "Explorations")) {
+                String createTableQuery = "CREATE TABLE Explorations ( id INTEGER NOT NULL UNIQUE, steps INTEGER NOT NULL, resources INTEGER NOT NULL, outcome TEXT NOT NULL, PRIMARY KEY(id AUTOINCREMENT) )";
+                statement.executeUpdate(createTableQuery);
             }
+            String query = "INSERT INTO Explorations (steps, resources, outcome) VALUES (?, ?, ?)";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, steps);
+            preparedStatement.setInt(2, numberOfResources);
+            preparedStatement.setString(3, String.valueOf(explorationOutcome));
+            preparedStatement.executeUpdate();
+            System.out.println("Exploration data added to database");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private boolean tableExists(Connection connection, String tableName) throws SQLException {
+        ResultSet resultSet = connection.getMetaData().getTables(null, null, tableName, null);
+        return resultSet.next();
     }
 }
