@@ -69,11 +69,11 @@ public class ExplorationSimulator {
     }
 
     public void saveInDatabase(int steps, int numberOfResources, ExplorationOutcome explorationOutcome){
-        String DB_URL = "jdbc:mysql:src/main/resources/exploration.db";
+        String DB_URL = "jdbc:sqlite:src/main/resources/exploration.db";
         String DB_USER = "root";
         String DB_PASSWORD = "password";
-            try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-                String query = "INSERT INTO Explorations (steps, resouces, outcome) VALUES (?, ?, ?)";
+            try (Connection connection = DriverManager.getConnection(DB_URL)) {
+                String query = "INSERT INTO Explorations (steps, resources, outcome) VALUES (?, ?, ?)";
 
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
 
