@@ -14,20 +14,17 @@ public class ExplorationSimulator {
 
     private final ExplorationResultDisplay explorationResultDisplay;
     private final MapLoader mapLoader;
-    private final ConfigurationValidator configurationValidator;
     private final AllOutcomeAnalyzer allOutcomeAnalyzer;
     private final MovementService movementService;
     private final Logger logger;
 
     public ExplorationSimulator(ExplorationResultDisplay explorationResultDisplay,
                                 MapLoader mapLoader,
-                                ConfigurationValidator configurationValidator,
                                 MovementService movementService,
                                 AllOutcomeAnalyzer allOutcomeAnalyzer,
                                 Logger logger) {
         this.explorationResultDisplay = explorationResultDisplay;
         this.mapLoader = mapLoader;
-        this.configurationValidator = configurationValidator;
         this.movementService = movementService;
         this.allOutcomeAnalyzer = allOutcomeAnalyzer;
         this.logger = logger;
