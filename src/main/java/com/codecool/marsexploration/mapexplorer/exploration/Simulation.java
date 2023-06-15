@@ -16,15 +16,18 @@ public class Simulation {
     private int numberOfSteps;
     private ExplorationOutcome explorationOutcome;
 
-    public Simulation(int numberOfSteps, int stepsToTimeout, Rover rover, Coordinate spaceshipCoordinate, Map map,
-                      List<String> resourcesToMonitor, ExplorationOutcome explorationOutcome) {
-        this.numberOfSteps = numberOfSteps;
+    public Simulation(int stepsToTimeout,
+                      Rover rover,
+                      Coordinate spaceshipCoordinate,
+                      Map map,
+                      List<String> resourcesToMonitor) {
         this.stepsToTimeout = stepsToTimeout;
         this.rover = rover;
         this.spaceshipCoordinate = spaceshipCoordinate;
         this.map = map;
         this.resourcesToMonitor = resourcesToMonitor;
-        this.explorationOutcome = explorationOutcome;
+        this.numberOfSteps = 0;
+        this.explorationOutcome = null;
     }
 
     public int numberOfSteps() {

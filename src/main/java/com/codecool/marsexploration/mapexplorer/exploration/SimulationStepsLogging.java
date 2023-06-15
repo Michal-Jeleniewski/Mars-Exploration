@@ -2,7 +2,6 @@ package com.codecool.marsexploration.mapexplorer.exploration;
 
 import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
 import com.codecool.marsexploration.mapexplorer.logger.Logger;
-import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 
 public class SimulationStepsLogging {
     private final Simulation simulation;

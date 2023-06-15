@@ -6,51 +6,58 @@ import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationValid
 import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
-import com.codecool.marsexploration.mapexplorer.rovers.RoverPlacement;
 
 public class ExplorationSimulator {
 
+    private final ExplorationResultDisplay explorationResultDisplay;
+    private final MapLoader mapLoader;
+    private final ConfigurationValidator configurationValidator;
     private final AllOutcomeAnalyzer allOutcomeAnalyzer;
-    private ConfigurationParameters configurationParameters;
-    private MapLoader mapLoader;
-    private ConfigurationValidator configurationValidator;
-    private RoverPlacement roverPlacement;
-    private Rover rover;
-    private MovementService movementService;
+    private final MovementService movementService;
+    private final Logger logger;
 
-    private Logger logger;
-
-    public ExplorationSimulator(ConfigurationParameters configurationParameters, MapLoader mapLoader, ConfigurationValidator configurationValidator, RoverPlacement roverPlacement, Rover rover, MovementService movementService, AllOutcomeAnalyzer allOutcomeAnalyzer, Logger logger) {
-        this.configurationParameters = configurationParameters;
+    public ExplorationSimulator(ExplorationResultDisplay explorationResultDisplay,
+                                MapLoader mapLoader,
+                                ConfigurationValidator configurationValidator,
+                                MovementService movementService,
+                                AllOutcomeAnalyzer allOutcomeAnalyzer,
+                                Logger logger) {
+        this.explorationResultDisplay = explorationResultDisplay;
         this.mapLoader = mapLoader;
         this.configurationValidator = configurationValidator;
-        this.roverPlacement = roverPlacement;
-        this.allOutcomeAnalyzer = allOutcomeAnalyzer;
-        this.rover = rover;
         this.movementService = movementService;
+        this.allOutcomeAnalyzer = allOutcomeAnalyzer;
         this.logger = logger;
     }
 
-    public void runSimulation(ConfigurationParameters configurationParameters) {
-        Simulation simulation = new Simulation(0, configurationParameters.maxSteps(), rover,
+    public void runSimulation(ConfigurationParameters configurationParameters, Rover rover) {
+        Simulation simulation = new Simulation(
+                configurationParameters.maxSteps(),
+                rover,
                 configurationParameters.spaceshipLandingPoint(),
-                mapLoader.load(configurationParameters.mapPath()), configurationParameters.symbols(), null);
+                mapLoader.load(configurationParameters.mapPath()),
+                configurationParameters.symbols()
+        );
+
         SimulationStepsLogging simulationStepsLogging = new SimulationStepsLogging(simulation, logger, allOutcomeAnalyzer);
 
-        while (simulation.explorationOutcome() == null && simulation.numberOfSteps() < configurationParameters.maxSteps()) {
+        while (simulation.explorationOutcome() == null) {
             movementService.move();
-            configurationParameters.symbols().forEach(symbol -> {
-                rover.checkForResourcesAround(symbol);
-            });
+
+            configurationParameters.symbols().forEach(rover::checkForObjectsAround);
             rover.addScannedCoordinates();
+
             ExplorationOutcome explorationOutcome = allOutcomeAnalyzer.analyze(simulation);
-            simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
             if (explorationOutcome != null) {
                 simulation.setExplorationOutcome(explorationOutcome);
             }
-            System.out.println(simulation);
+
             simulationStepsLogging.logSteps();
+
+            simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
         }
+
+        explorationResultDisplay.displayExploredMap(rover);
 
         // IN LOOP
 
@@ -65,10 +72,5 @@ public class ExplorationSimulator {
         // Step increment. Increment the context step variable by one.
 
 
-    }
-
-
-    public AllOutcomeAnalyzer getAllOutcomeAnalyzer() {
-        return allOutcomeAnalyzer;
     }
 }

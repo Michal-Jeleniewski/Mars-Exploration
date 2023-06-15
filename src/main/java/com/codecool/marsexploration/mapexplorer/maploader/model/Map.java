@@ -1,16 +1,12 @@
 package com.codecool.marsexploration.mapexplorer.maploader.model;
 
 public class Map {
-    private String[][] representation;
-    private boolean successfullyGenerated;
+    private final String[][] representation;
+    private final boolean successfullyGenerated;
 
     public Map(String[][] representation, boolean successfullyGenerated) {
         this.representation = representation;
         this.successfullyGenerated = successfullyGenerated;
-    }
-
-    public int getDimension() {
-        return representation.length;
     }
 
     private static String createStringRepresentation(String[][] arr) {
@@ -26,6 +22,14 @@ public class Map {
         }
 
         return sb.toString();
+    }
+
+    public String[][] getRepresentation() {
+        return representation;
+    }
+
+    public int getDimension() {
+        return representation.length;
     }
 
     public String getByCoordinate(Coordinate coordinate) {

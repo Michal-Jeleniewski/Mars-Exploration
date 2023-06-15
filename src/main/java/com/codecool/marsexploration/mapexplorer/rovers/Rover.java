@@ -9,62 +9,60 @@ import java.util.*;
 public class Rover {
     private final List<Coordinate> previousPositions;
     private final String id;
-    private final java.util.Map<String, Set<Coordinate>> resourcesPoints;
+    private final java.util.Map<String, Set<Coordinate>> objectsPoints;
     private final Map map;
     private final int sightRange;
+    private final Set<Coordinate> scannedCoordinates;
     private Coordinate position;
-    private final Set<Coordinate> scannedCoordinations;
 
-
-    public List<Coordinate> getPreviousPositions() {
-        return previousPositions;
-    }
 
     public Rover(String id, Coordinate position, int sightRange, Map map) {
         this.id = id;
         this.position = position;
         this.sightRange = sightRange;
-        this.resourcesPoints = new HashMap<>();
+        this.objectsPoints = new HashMap<>();
         this.map = map;
         previousPositions = new ArrayList<>();
-        scannedCoordinations = new HashSet<>();
+        scannedCoordinates = new HashSet<>();
     }
 
-    public Set<Coordinate> getScannedCoordinations() {
-        return scannedCoordinations;
+    public List<Coordinate> getPreviousPositions() {
+        return previousPositions;
     }
 
-
-    public java.util.Map<String, Set<Coordinate>> getResourcesPoints() {
-        return resourcesPoints;
+    public Set<Coordinate> getScannedCoordinates() {
+        return scannedCoordinates;
     }
 
-   public void  addScannedCoordinates(){
-       List<Coordinate> coordinatesToAdd = CoordinateCalculatorService.getCoordinatesAround(position, sightRange, map.getDimension());
-       scannedCoordinations.addAll(coordinatesToAdd);
+    public java.util.Map<String, Set<Coordinate>> getObjectsPoints() {
+        return objectsPoints;
     }
 
+    public void addScannedCoordinates() {
+        List<Coordinate> coordinatesToAdd = CoordinateCalculatorService.getCoordinatesAround(position, sightRange, map.getDimension());
+        scannedCoordinates.addAll(coordinatesToAdd);
+    }
 
-    public void checkForResourcesAround(String resource) {
+    public void checkForObjectsAround(String resource) {
         List<Coordinate> coordinatesToCheck = CoordinateCalculatorService.getCoordinatesAround(position, sightRange, map.getDimension());
-        scannedCoordinations.addAll(coordinatesToCheck);
+        scannedCoordinates.addAll(coordinatesToCheck);
         coordinatesToCheck.forEach(coordinate -> {
             if (map.getByCoordinate(coordinate).equals(resource)) {
-                saveResourcePoint(coordinate, resource);
+                saveObjectPoint(coordinate, resource);
             }
         });
     }
 
-    public void saveResourcePoint(Coordinate coordinate, String resource) {
+    public void saveObjectPoint(Coordinate coordinate, String resource) {
         Set<Coordinate> coordinateList;
-        if (resourcesPoints.containsKey(resource)) {
-            coordinateList = resourcesPoints.get(resource);
+        if (objectsPoints.containsKey(resource)) {
+            coordinateList = objectsPoints.get(resource);
         } else {
             coordinateList = new HashSet<>() {
             };
         }
         coordinateList.add(coordinate);
-        resourcesPoints.put(resource, coordinateList);
+        objectsPoints.put(resource, coordinateList);
     }
 
     public void addToPreviousPositionsList(Coordinate coordinate) {
