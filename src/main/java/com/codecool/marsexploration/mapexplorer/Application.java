@@ -23,7 +23,7 @@ import static com.codecool.marsexploration.mapexplorer.maploader.model.Symbol.*;
 public class Application {
     private static final String workDir = "src/main";
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         String mapFile = workDir + "/resources/exploration-0.map";
         Coordinate landingSpot = new Coordinate(6, 6);
         List<String> objectsToScan = List.of(MINERAL.getSymbol(), WATER.getSymbol(), MOUNTAIN.getSymbol(), PIT.getSymbol());
@@ -56,9 +56,14 @@ public class Application {
 
         ExplorationResultDisplay explorationResultDisplay = new ExplorationResultDisplay(map.getDimension());
 
-        ExplorationSimulator explorationSimulator = new ExplorationSimulator(explorationResultDisplay, mapLoader, configurationValidator, movementService, allOutcomeAnalyzer, logger);
+        ExplorationSimulator explorationSimulator = new ExplorationSimulator(explorationResultDisplay, mapLoader, movementService, allOutcomeAnalyzer, logger);
 
-        explorationSimulator.runSimulation(configurationParameters, rover);
+        if (configurationValidator.validate(configurationParameters)) {
+            System.out.println("Configuration validation successful. Starting simulation.");
+            explorationSimulator.runSimulation(configurationParameters, rover);
+        } else {
+            System.out.println("Configuration validation failed. Simulation will not run.");
+        }
     }
 }
 
