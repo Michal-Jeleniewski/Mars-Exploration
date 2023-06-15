@@ -8,6 +8,8 @@ import com.codecool.marsexploration.mapexplorer.service.MapToEmojiTranslator;
 import java.util.Arrays;
 import java.util.Set;
 
+import static com.codecool.marsexploration.mapexplorer.maploader.model.Symbol.*;
+
 public class ExplorationResultDisplay {
     private final int mapDimension;
     private final MapToEmojiTranslator mapToEmojiTranslator;
@@ -37,14 +39,14 @@ public class ExplorationResultDisplay {
 
     private void fillWithX(String[][] representation) {
         for (int i = 0; i < mapDimension; i++) {
-            Arrays.fill(representation[i], "X");
+            Arrays.fill(representation[i], HIDDEN.getSymbol());
         }
     }
 
     private void revealScannedCoordinates(Rover rover, String[][] representation) {
         Set<Coordinate> scannedCoordinates = rover.getScannedCoordinates();
         for (Coordinate coordinate : scannedCoordinates) {
-            representation[coordinate.X()][coordinate.Y()] = " ";
+            representation[coordinate.X()][coordinate.Y()] = SPACE.getSymbol();
         }
     }
 
@@ -60,6 +62,6 @@ public class ExplorationResultDisplay {
 
     private void markRover(Rover rover, String[][] representation) {
         Coordinate roverPosition = rover.getPosition();
-        representation[roverPosition.X()][roverPosition.Y()] = "O";
+        representation[roverPosition.X()][roverPosition.Y()] = ROVER.getSymbol();
     }
 }

@@ -18,13 +18,15 @@ import com.codecool.marsexploration.mapexplorer.rovers.RoverPlacement;
 import java.util.List;
 import java.util.Set;
 
+import static com.codecool.marsexploration.mapexplorer.maploader.model.Symbol.*;
+
 public class Application {
     private static final String workDir = "src/main";
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         String mapFile = workDir + "/resources/exploration-0.map";
         Coordinate landingSpot = new Coordinate(6, 6);
-        List<String> objectsToScan = List.of("%", "*", "#", "&");
+        List<String> objectsToScan = List.of(MINERAL.getSymbol(), WATER.getSymbol(), MOUNTAIN.getSymbol(), PIT.getSymbol());
         int maxSteps = 1000;
 
         ConfigurationParameters configurationParameters = new ConfigurationParameters(mapFile, landingSpot, objectsToScan, maxSteps);
@@ -38,7 +40,7 @@ public class Application {
         Set<Validator> validators = Set.of(new EmptyLandingSpotValidator(), new FilePathValidator(), new AdjacentCoordinateValidator(), new ResourcesValidator(), new TimeoutValidator());
         ConfigurationValidator configurationValidator = new ConfigurationValidator(map, validators);
 
-        List<String> valuableResources = List.of("*", "%");
+        List<String> valuableResources = List.of(MINERAL.getSymbol(), WATER.getSymbol());
 
         Set<OutcomeAnalyzer> analyzers = Set.of(new SuccessAnalyzer(10, valuableResources), new TimeoutAnalyzer(), new LackOfResourcesAnalyzer(0.7));
         AllOutcomeAnalyzer allOutcomeAnalyzer = new AllOutcomeAnalyzer(analyzers);
@@ -54,9 +56,14 @@ public class Application {
 
         ExplorationResultDisplay explorationResultDisplay = new ExplorationResultDisplay(map.getDimension());
 
-        ExplorationSimulator explorationSimulator = new ExplorationSimulator(explorationResultDisplay, mapLoader, configurationValidator, movementService, allOutcomeAnalyzer, logger);
+        ExplorationSimulator explorationSimulator = new ExplorationSimulator(explorationResultDisplay, mapLoader, movementService, allOutcomeAnalyzer, logger);
 
-        explorationSimulator.runSimulation(configurationParameters, rover);
+        if (configurationValidator.validate(configurationParameters)) {
+            System.out.println("Configuration validation successful. Starting simulation.");
+            explorationSimulator.runSimulation(configurationParameters, rover);
+        } else {
+            System.out.println("Configuration validation failed. Simulation will not run.");
+        }
     }
 }
 
