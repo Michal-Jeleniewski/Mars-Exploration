@@ -1,5 +1,7 @@
 package com.codecool.marsexploration.mapexplorer.maploader.model;
 
+import static com.codecool.marsexploration.mapexplorer.maploader.model.Symbol.*;
+
 public class Map {
     private final String[][] representation;
     private final boolean successfullyGenerated;
@@ -15,7 +17,7 @@ public class Map {
         for (String[] strings : arr) {
             StringBuilder s = new StringBuilder();
             for (String string : strings) {
-                s.append(string == null ? " " : string);
+                s.append(string == null ? SPACE.getSymbol() : string);
             }
 
             sb.append(s).append("\n");
@@ -39,7 +41,7 @@ public class Map {
     public boolean isEmpty(Coordinate coordinate) {
         return representation[coordinate.X()][coordinate.Y()] == null
                 || representation[coordinate.X()][coordinate.Y()].isEmpty()
-                || representation[coordinate.X()][coordinate.Y()].equals(" ");
+                || representation[coordinate.X()][coordinate.Y()].equals(SPACE.getSymbol());
     }
 
     @Override
