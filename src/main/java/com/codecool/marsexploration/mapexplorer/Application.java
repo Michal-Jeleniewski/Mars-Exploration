@@ -12,6 +12,7 @@ import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoaderImpl;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Map;
+import com.codecool.marsexploration.mapexplorer.repository.ExplorationsRepository;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverPlacement;
 
@@ -22,6 +23,7 @@ import static com.codecool.marsexploration.mapexplorer.maploader.model.Symbol.*;
 
 public class Application {
     private static final String workDir = "src/main";
+    private static final String JDBC_DATABASE_URL = "jdbc:sqlite:src/main/resources/exploration.db";
 
     public static void main(String[] args) {
         String mapFile = workDir + "/resources/exploration-0.map";
@@ -56,7 +58,10 @@ public class Application {
 
         ExplorationResultDisplay explorationResultDisplay = new ExplorationResultDisplay(map.getDimension());
 
-        ExplorationSimulator explorationSimulator = new ExplorationSimulator(explorationResultDisplay, mapLoader, movementService, allOutcomeAnalyzer, logger);
+        ExplorationsRepository explorationsRepository = new ExplorationsRepository(JDBC_DATABASE_URL);
+        explorationsRepository.createTableIfDoesNotExist();
+
+        ExplorationSimulator explorationSimulator = new ExplorationSimulator(explorationResultDisplay, mapLoader, movementService, allOutcomeAnalyzer, logger, explorationsRepository);
 
         if (configurationValidator.validate(configurationParameters)) {
             System.out.println("Configuration validation successful. Starting simulation.");
