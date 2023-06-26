@@ -42,9 +42,9 @@ public class Application {
         Set<Validator> validators = Set.of(new EmptyLandingSpotValidator(), new FilePathValidator(), new AdjacentCoordinateValidator(), new ResourcesValidator(), new TimeoutValidator());
         ConfigurationValidator configurationValidator = new ConfigurationValidator(map, validators);
 
-        List<String> valuableResources = List.of(MINERAL.getSymbol(), WATER.getSymbol());
+        List<String> valuableResources = List.of(MINERAL.getSymbol());
 
-        Set<OutcomeAnalyzer> analyzers = Set.of(new SuccessAnalyzer(10, valuableResources), new TimeoutAnalyzer(), new LackOfResourcesAnalyzer(0.7));
+        Set<OutcomeAnalyzer> analyzers = Set.of(new SuccessAnalyzer(5, valuableResources), new TimeoutAnalyzer(), new LackOfResourcesAnalyzer(0.7));
         AllOutcomeAnalyzer allOutcomeAnalyzer = new AllOutcomeAnalyzer(analyzers);
 
         RoverPlacement roverPlacement = new RoverPlacement(map, landingSpot);

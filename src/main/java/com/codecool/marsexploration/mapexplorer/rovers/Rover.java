@@ -5,6 +5,9 @@ import com.codecool.marsexploration.mapexplorer.maploader.model.Map;
 import com.codecool.marsexploration.mapexplorer.service.CoordinateCalculatorService;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.codecool.marsexploration.mapexplorer.maploader.model.Symbol.MINERAL;
 
 public class Rover {
     private final List<Coordinate> previousPositions;
@@ -14,6 +17,7 @@ public class Rover {
     private final int sightRange;
     private final Set<Coordinate> scannedCoordinates;
     private Coordinate position;
+    private List<Coordinate> mineralPoints;
 
 
     public Rover(String id, Coordinate position, int sightRange, Map map) {
@@ -24,7 +28,10 @@ public class Rover {
         this.map = map;
         previousPositions = new ArrayList<>();
         scannedCoordinates = new HashSet<>();
+        mineralPoints = null;
     }
+
+
 
     public List<Coordinate> getPreviousPositions() {
         return previousPositions;
@@ -67,6 +74,14 @@ public class Rover {
 
     public void addToPreviousPositionsList(Coordinate coordinate) {
         previousPositions.add(coordinate);
+    }
+
+    public void createMineralPoints() {
+        mineralPoints = objectsPoints.get(MINERAL.getSymbol()).stream().toList();
+    }
+
+    public List<Coordinate> getMineralPoints() {
+        return mineralPoints;
     }
 
     public Coordinate getPosition() {

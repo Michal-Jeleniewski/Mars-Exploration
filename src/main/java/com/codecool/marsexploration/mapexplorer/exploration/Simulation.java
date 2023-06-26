@@ -38,7 +38,7 @@ public class Simulation {
         return stepsToTimeout;
     }
 
-    public Rover rover() {
+    public Rover getRover() {
         return rover;
     }
 

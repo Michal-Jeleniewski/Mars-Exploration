@@ -31,7 +31,7 @@ public class SuccessAnalyzer implements OutcomeAnalyzer {
     }
 
     private Map<String, Set<Coordinate>> getDesirableResources(Simulation simulation) {
-        return simulation.rover().getObjectsPoints().entrySet().stream()
+        return simulation.getRover().getObjectsPoints().entrySet().stream()
                 .filter(entry -> valuableResources.contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
