@@ -18,6 +18,7 @@ public class Rover {
     private final Set<Coordinate> scannedCoordinates;
     private Coordinate position;
     private List<Coordinate> mineralPoints;
+    private RoverStatus roverStatus;
 
 
     public Rover(String id, Coordinate position, int sightRange, Map map) {
@@ -29,12 +30,17 @@ public class Rover {
         previousPositions = new ArrayList<>();
         scannedCoordinates = new HashSet<>();
         mineralPoints = null;
+        roverStatus = RoverStatus.EXPLORE;
     }
 
 
 
     public List<Coordinate> getPreviousPositions() {
         return previousPositions;
+    }
+
+    public void setRoverStatus(RoverStatus roverStatus) {
+        this.roverStatus = roverStatus;
     }
 
     public Set<Coordinate> getScannedCoordinates() {

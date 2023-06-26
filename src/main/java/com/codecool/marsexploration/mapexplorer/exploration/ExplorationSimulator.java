@@ -1,6 +1,7 @@
 package com.codecool.marsexploration.mapexplorer.exploration;
 
 import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
+import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationParameters;
 import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
@@ -8,6 +9,7 @@ import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.repository.ExplorationsDto;
 import com.codecool.marsexploration.mapexplorer.repository.ExplorationsRepository;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
+import com.codecool.marsexploration.mapexplorer.rovers.RoverStatus;
 import com.codecool.marsexploration.mapexplorer.service.CoordinateCalculatorService;
 
 import java.util.List;
@@ -71,6 +73,7 @@ public class ExplorationSimulator {
         explorationResultDisplay.displayExploredMap(rover);
 
         if (simulation.explorationOutcome() == ExplorationOutcome.COLONIZABLE) {
+            simulation.getRover().setRoverStatus(RoverStatus.GO_TO_RESOURCE);
             runColonization(configurationParameters, simulation);
         }
 
@@ -81,7 +84,7 @@ public class ExplorationSimulator {
 
         Random random = new Random();
 
-        Coordinate randomMineralPoint = simulation.getRover().getMineralPoints().get(random.nextInt(simulation.getRover().getMineralPoints().size() -1));
+        Coordinate randomMineralPoint = simulation.getRover().getMineralPoints().get(random.nextInt(simulation.getRover().getMineralPoints().size() - 1));
         List<Coordinate> randomMineralAdjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(randomMineralPoint, simulation.map().getDimension());
 
         while (!randomMineralAdjacentCoordinates.contains(simulation.getRover().getPosition())) {
@@ -89,8 +92,19 @@ public class ExplorationSimulator {
             configurationParameters.symbols().forEach(simulation.getRover()::checkForObjectsAround);
             simulation.getRover().addScannedCoordinates();
             explorationResultDisplay.displayExploredMap(simulation.getRover());
+            simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
         }
 
+        simulation.getRover().setRoverStatus(RoverStatus.EXTRACT);
+        simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
+
+        simulation.getRover().setRoverStatus(RoverStatus.BUILD_BASE);
+
+        // pewnie osobna metoda
+        CommandCenter commandCenter = new CommandCenter("1", simulation.getRover().getPosition());
+        // podmienić symbol na mapie na symbol bazy
+
+        //
         System.out.println(randomMineralPoint);
         System.out.println(simulation.getRover().getPosition());
 
@@ -102,17 +116,14 @@ public class ExplorationSimulator {
         int Y = roverPosition.Y();
         if (roverPosition.X() > randomMineralPoint.X()) {
             X -= 1;
-        }
-        else if (roverPosition.X() < randomMineralPoint.X()) {
+        } else if (roverPosition.X() < randomMineralPoint.X()) {
             X += 1;
-        }
-        else if (roverPosition.Y() > randomMineralPoint.Y()) {
+        } else if (roverPosition.Y() > randomMineralPoint.Y()) {
             Y -= 1;
-        }
-        else if (roverPosition.Y() < randomMineralPoint.Y()) {
+        } else if (roverPosition.Y() < randomMineralPoint.Y()) {
             Y += 1;
         }
-        Coordinate newPosition = new Coordinate(X,Y);
+        Coordinate newPosition = new Coordinate(X, Y);
         rover.setPosition(newPosition);
     }
 }

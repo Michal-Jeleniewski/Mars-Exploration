@@ -8,7 +8,9 @@ public enum Symbol {
     SPACE(" ", "\uD83D\uDFE8"),
     HIDDEN("X","⬛"),
     ROVER("O", "🚙"),
-    NOSYMBOL("", "");
+    NOSYMBOL("", ""),
+
+    BASE("B" , "\uD83C\uDFD9\uFE0F");
 
     private final String symbol;
 
