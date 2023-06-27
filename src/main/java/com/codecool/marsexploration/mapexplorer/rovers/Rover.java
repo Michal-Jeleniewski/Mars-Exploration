@@ -19,6 +19,7 @@ public class Rover {
     private List<Coordinate> mineralPoints;
     private RoverStatus roverStatus;
     private String[] resourceInventory = new String[1];
+    private Coordinate destination;
 
 
     public Rover(String id, Coordinate position, int sightRange, Map map) {
@@ -41,6 +42,10 @@ public class Rover {
 
     public void setRoverStatus(RoverStatus roverStatus) {
         this.roverStatus = roverStatus;
+    }
+
+    public RoverStatus getRoverStatus() {
+        return roverStatus;
     }
 
     public Set<Coordinate> getScannedCoordinates() {
@@ -108,5 +113,13 @@ public class Rover {
 
     public String[] getResourceInventory() {
         return resourceInventory;
+    }
+
+    public Coordinate getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Coordinate destination) {
+        this.destination = destination;
     }
 }
