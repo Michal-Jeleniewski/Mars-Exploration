@@ -16,6 +16,7 @@ public class MapToEmojiTranslator {
         emojiDictionary.put(SPACE.getSymbol(), SPACE.getEmojiCode());
         emojiDictionary.put(HIDDEN.getSymbol(), HIDDEN.getEmojiCode());
         emojiDictionary.put(ROVER.getSymbol(), ROVER.getEmojiCode());
+        emojiDictionary.put(BASE.getSymbol(), BASE.getEmojiCode());
 
         String[][] representation = map.getRepresentation();
 

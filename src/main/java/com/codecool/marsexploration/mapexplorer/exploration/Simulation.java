@@ -1,6 +1,7 @@
 package com.codecool.marsexploration.mapexplorer.exploration;
 
 
+import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Map;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
@@ -15,6 +16,7 @@ public class Simulation {
     private final List<String> resourcesToMonitor;
     private int numberOfSteps;
     private ExplorationOutcome explorationOutcome;
+    private CommandCenter commandCenter;
 
     public Simulation(int stepsToTimeout,
                       List<Rover> rovers,
@@ -28,6 +30,7 @@ public class Simulation {
         this.resourcesToMonitor = resourcesToMonitor;
         this.numberOfSteps = 0;
         this.explorationOutcome = null;
+        this.commandCenter = null;
     }
 
     public int numberOfSteps() {
@@ -46,7 +49,7 @@ public class Simulation {
         return spaceshipCoordinate;
     }
 
-    public Map map() {
+    public Map getMap() {
         return map;
     }
 
@@ -76,5 +79,13 @@ public class Simulation {
 
     public void setExplorationOutcome(ExplorationOutcome explorationOutcome) {
         this.explorationOutcome = explorationOutcome;
+    }
+
+    public CommandCenter getCommandCenter() {
+        return commandCenter;
+    }
+
+    public void setCommandCenter(CommandCenter commandCenter) {
+        this.commandCenter = commandCenter;
     }
 }

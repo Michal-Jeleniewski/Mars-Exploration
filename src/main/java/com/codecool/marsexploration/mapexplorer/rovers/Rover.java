@@ -12,6 +12,7 @@ public class Rover {
     private final List<Coordinate> previousPositions;
     private final String id;
     private final java.util.Map<String, Set<Coordinate>> objectsPoints;
+
     private final Map map;
     private final int sightRange;
     private final Set<Coordinate> scannedCoordinates;
@@ -121,5 +122,9 @@ public class Rover {
 
     public void setDestination(Coordinate destination) {
         this.destination = destination;
+    }
+
+    public void clearInventory() {
+        resourceInventory = new String[1];
     }
 }

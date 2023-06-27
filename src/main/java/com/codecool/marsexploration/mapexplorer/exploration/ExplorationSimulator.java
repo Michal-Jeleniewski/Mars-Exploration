@@ -1,20 +1,23 @@
 package com.codecool.marsexploration.mapexplorer.exploration;
 
 import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
+import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationParameters;
 import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
+import com.codecool.marsexploration.mapexplorer.maploader.model.Symbol;
 import com.codecool.marsexploration.mapexplorer.repository.ExplorationsDto;
 import com.codecool.marsexploration.mapexplorer.repository.ExplorationsRepository;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverStatus;
 import com.codecool.marsexploration.mapexplorer.service.CoordinateCalculatorService;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
+import static com.codecool.marsexploration.mapexplorer.rovers.RoverStatus.*;
 
 public class ExplorationSimulator {
 
@@ -91,7 +94,7 @@ public class ExplorationSimulator {
                 switch (rover.getRoverStatus()) {
                     case GO_TO_RESOURCE:
 
-                        List<Coordinate> randomMineralAdjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(rover.getDestination(), simulation.map().getDimension());
+                        List<Coordinate> randomMineralAdjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(rover.getDestination(), simulation.getMap().getDimension());
 
                         moveToCoordinate(rover.getDestination(), rover);
                         configurationParameters.symbols().forEach(rover::checkForObjectsAround);
@@ -100,14 +103,27 @@ public class ExplorationSimulator {
                         simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
 
                         if (randomMineralAdjacentCoordinates.contains(rover.getPosition())) {
-                            rover.setRoverStatus(RoverStatus.EXTRACT);
+                            rover.setRoverStatus(EXTRACT);
                         }
                         break;
 
                     case EXTRACT:
 
                         extractMineral(rover, rover.getDestination());
-                        System.out.println(Arrays.toString(rover.getResourceInventory()));
+                        if (simulation.getCommandCenter() == null) {
+                            rover.setRoverStatus(BUILD_BASE);
+                        } else {
+                            rover.setRoverStatus(DEPOSIT_RESOURCE);
+                        }
+
+                    case BUILD_BASE:
+
+                        rover.clearInventory();
+                        CommandCenter commandCenter = new CommandCenter("1", rover.getPosition());
+                        simulation.setCommandCenter(commandCenter);
+                        rover.saveObjectPoint(rover.getPosition(), Symbol.BASE.getSymbol());
+                        explorationResultDisplay.displayExploredMap(rover);
+                        rover.setRoverStatus(GO_TO_RESOURCE);
                 }
             });
         }

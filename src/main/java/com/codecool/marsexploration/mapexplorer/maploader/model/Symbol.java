@@ -10,7 +10,7 @@ public enum Symbol {
     ROVER("O", "🚙"),
     NOSYMBOL("", ""),
 
-    BASE("B" , "\uD83C\uDFD9\uFE0F");
+    BASE("B" , "\uD83C\uDFD9");
 
     private final String symbol;
 
