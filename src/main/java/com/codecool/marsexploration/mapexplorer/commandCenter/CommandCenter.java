@@ -6,20 +6,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandCenter {
+private static int numberOfBases = 1;
+private final String id;
 
-private String id;
-
-private Coordinate commandCenterCoordinates;
+private final Coordinate commandCenterCoordinates;
 
 private BaseStatus baseStatus;
 
     private Map<String , Integer> resourcesOnStock;
 
-    public CommandCenter(String id, Coordinate commandCenterCoordinates) {
-        this.id = id;
+    public CommandCenter(Coordinate commandCenterCoordinates) {
+        this.id = String.valueOf(numberOfBases);
         this.commandCenterCoordinates = commandCenterCoordinates;
         this.baseStatus = null;
         this.resourcesOnStock = new HashMap<>();
+        numberOfBases++;
     }
 
 

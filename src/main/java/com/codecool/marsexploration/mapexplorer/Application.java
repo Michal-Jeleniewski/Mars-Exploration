@@ -49,10 +49,9 @@ public class Application {
 
         RoverPlacement roverPlacement = new RoverPlacement(map, landingSpot);
 
-        String roverId = "rover-1";
         Coordinate roverStartingSpot = roverPlacement.generateCoordinateForRover();
         int sightRange = 2;
-        Rover rover = new Rover(roverId, roverStartingSpot, sightRange, map);
+        Rover rover = new Rover(roverStartingSpot, sightRange, map);
         List<Rover> rovers = List.of(rover);
 
         MovementService movementService = new RandomAvoidingRevisitingMovementService(rover, map);

@@ -10,6 +10,7 @@ import static com.codecool.marsexploration.mapexplorer.maploader.model.Symbol.MI
 
 public class Rover {
     private final List<Coordinate> previousPositions;
+    private static int numberOfRovers = 1;
     private final String id;
     private final java.util.Map<String, Set<Coordinate>> objectsPoints;
 
@@ -23,8 +24,8 @@ public class Rover {
     private Coordinate destination;
 
 
-    public Rover(String id, Coordinate position, int sightRange, Map map) {
-        this.id = id;
+    public Rover(Coordinate position, int sightRange, Map map) {
+        this.id = "rover-" + numberOfRovers;
         this.position = position;
         this.sightRange = sightRange;
         this.objectsPoints = new HashMap<>();
@@ -33,6 +34,7 @@ public class Rover {
         scannedCoordinates = new HashSet<>();
         mineralPoints = null;
         roverStatus = RoverStatus.EXPLORE;
+        numberOfRovers++;
     }
 
 

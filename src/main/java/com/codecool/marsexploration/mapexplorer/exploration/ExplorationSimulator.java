@@ -119,7 +119,7 @@ public class ExplorationSimulator {
                     case BUILD_BASE:
 
                         rover.clearInventory();
-                        CommandCenter commandCenter = new CommandCenter("1", rover.getPosition());
+                        CommandCenter commandCenter = new CommandCenter(rover.getPosition());
                         simulation.setCommandCenter(commandCenter);
                         rover.saveObjectPoint(rover.getPosition(), Symbol.BASE.getSymbol());
                         explorationResultDisplay.displayExploredMap(rover);
