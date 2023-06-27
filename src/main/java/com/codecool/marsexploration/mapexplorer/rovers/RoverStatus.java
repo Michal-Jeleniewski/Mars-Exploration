@@ -6,6 +6,6 @@ public enum RoverStatus {
     GO_TO_RESOURCE,
     EXTRACT,
     BUILD_BASE,
-    DEPOSIT_RESOURCE
-
+    DEPOSIT_RESOURCE,
+    GO_TO_BASE
 }

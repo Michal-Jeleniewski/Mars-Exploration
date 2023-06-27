@@ -88,8 +88,11 @@ public class ExplorationSimulator {
     }
 
     private void runColonization(ConfigurationParameters configurationParameters, Simulation simulation) {
-
-        while (true) {
+        boolean isRunning = true;
+        while (isRunning) {
+            if (simulation.getCommandCenter() != null && simulation.getCommandCenter().getMineralsOnStock() > 10) {
+                isRunning = false;
+            }
             simulation.getRovers().forEach(rover -> {
                 switch (rover.getRoverStatus()) {
                     case GO_TO_RESOURCE:
@@ -113,17 +116,34 @@ public class ExplorationSimulator {
                         if (simulation.getCommandCenter() == null) {
                             rover.setRoverStatus(BUILD_BASE);
                         } else {
-                            rover.setRoverStatus(DEPOSIT_RESOURCE);
+                            rover.setRoverStatus(GO_TO_BASE);
                         }
+                        break;
 
                     case BUILD_BASE:
 
                         rover.clearInventory();
-                        CommandCenter commandCenter = new CommandCenter(rover.getPosition());
+                        CommandCenter commandCenter = new CommandCenter(rover.getPosition(), rover.getMineralPoints());
                         simulation.setCommandCenter(commandCenter);
                         rover.saveObjectPoint(rover.getPosition(), Symbol.BASE.getSymbol());
                         explorationResultDisplay.displayExploredMap(rover);
                         rover.setRoverStatus(GO_TO_RESOURCE);
+                        break;
+
+                    case GO_TO_BASE:
+
+                        List<Coordinate> baseAdjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(simulation.getCommandCenter().getCommandCenterPosition(), simulation.getMap().getDimension());
+                        moveToCoordinate(simulation.getCommandCenter().getCommandCenterPosition(), rover);
+                        if (baseAdjacentCoordinates.contains(rover.getPosition())) {
+                            rover.setRoverStatus(DEPOSIT_RESOURCE);
+                        }
+                        break;
+
+                    case DEPOSIT_RESOURCE:
+                        rover.clearInventory();
+                        simulation.getCommandCenter().addMineral();
+                        rover.setRoverStatus(GO_TO_RESOURCE);
+                        break;
                 }
             });
         }
@@ -147,17 +167,17 @@ public class ExplorationSimulator {
         rover.addToResourceInventory(randomMineralPoint);
     }
 
-    private void moveToCoordinate(Coordinate randomMineralPoint, Rover rover) {
+    private void moveToCoordinate(Coordinate destination, Rover rover) {
         Coordinate roverPosition = rover.getPosition();
         int X = roverPosition.X();
         int Y = roverPosition.Y();
-        if (roverPosition.X() > randomMineralPoint.X()) {
+        if (roverPosition.X() > destination.X()) {
             X -= 1;
-        } else if (roverPosition.X() < randomMineralPoint.X()) {
+        } else if (roverPosition.X() < destination.X()) {
             X += 1;
-        } else if (roverPosition.Y() > randomMineralPoint.Y()) {
+        } else if (roverPosition.Y() > destination.Y()) {
             Y -= 1;
-        } else if (roverPosition.Y() < randomMineralPoint.Y()) {
+        } else if (roverPosition.Y() < destination.Y()) {
             Y += 1;
         }
         Coordinate newPosition = new Coordinate(X, Y);
