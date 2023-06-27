@@ -93,21 +93,27 @@ public class ExplorationSimulator {
             if (simulation.getCommandCenter() != null && simulation.getCommandCenter().getMineralsOnStock() > 10) {
                 isRunning = false;
             }
+            try {
+                Thread.sleep(400);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             simulation.getRovers().forEach(rover -> {
                 switch (rover.getRoverStatus()) {
                     case GO_TO_RESOURCE:
 
                         List<Coordinate> randomMineralAdjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(rover.getDestination(), simulation.getMap().getDimension());
 
-                        moveToCoordinate(rover.getDestination(), rover);
-                        configurationParameters.symbols().forEach(rover::checkForObjectsAround);
-                        rover.addScannedCoordinates();
-                        explorationResultDisplay.displayExploredMap(rover);
-                        simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
-
                         if (randomMineralAdjacentCoordinates.contains(rover.getPosition())) {
                             rover.setRoverStatus(EXTRACT);
+                        } else {
+                            moveToCoordinate(rover.getDestination(), rover);
+                            configurationParameters.symbols().forEach(rover::checkForObjectsAround);
+                            rover.addScannedCoordinates();
                         }
+
+                        simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
+                        explorationResultDisplay.displayExploredMap(rover);
                         break;
 
                     case EXTRACT:
@@ -118,31 +124,40 @@ public class ExplorationSimulator {
                         } else {
                             rover.setRoverStatus(GO_TO_BASE);
                         }
+                        explorationResultDisplay.displayExploredMap(rover);
                         break;
 
                     case BUILD_BASE:
 
                         rover.clearInventory();
-                        CommandCenter commandCenter = new CommandCenter(rover.getPosition(), rover.getMineralPoints());
+                        List<Coordinate> roverAdjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(rover.getPosition(), simulation.getMap().getDimension());
+                        List<Coordinate> freeRoverAdjacentCoordinates = roverAdjacentCoordinates.stream().
+                                filter(simulation.getMap()::isEmpty)
+                                .toList();
+
+                        CommandCenter commandCenter = new CommandCenter(freeRoverAdjacentCoordinates.get(new Random().nextInt(freeRoverAdjacentCoordinates.size())), rover.getMineralPoints());
                         simulation.setCommandCenter(commandCenter);
-                        rover.saveObjectPoint(rover.getPosition(), Symbol.BASE.getSymbol());
-                        explorationResultDisplay.displayExploredMap(rover);
+                        rover.saveObjectPoint(simulation.getCommandCenter().getCommandCenterPosition(), Symbol.BASE.getSymbol());
                         rover.setRoverStatus(GO_TO_RESOURCE);
+                        explorationResultDisplay.displayExploredMap(rover);
                         break;
 
                     case GO_TO_BASE:
 
                         List<Coordinate> baseAdjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(simulation.getCommandCenter().getCommandCenterPosition(), simulation.getMap().getDimension());
-                        moveToCoordinate(simulation.getCommandCenter().getCommandCenterPosition(), rover);
                         if (baseAdjacentCoordinates.contains(rover.getPosition())) {
                             rover.setRoverStatus(DEPOSIT_RESOURCE);
+                        } else {
+                            moveToCoordinate(simulation.getCommandCenter().getCommandCenterPosition(), rover);
                         }
+                        explorationResultDisplay.displayExploredMap(rover);
                         break;
 
                     case DEPOSIT_RESOURCE:
                         rover.clearInventory();
                         simulation.getCommandCenter().addMineral();
                         rover.setRoverStatus(GO_TO_RESOURCE);
+                        explorationResultDisplay.displayExploredMap(rover);
                         break;
                 }
             });
