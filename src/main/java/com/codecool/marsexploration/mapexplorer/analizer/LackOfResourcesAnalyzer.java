@@ -13,7 +13,7 @@ public class LackOfResourcesAnalyzer implements OutcomeAnalyzer {
     @Override
     public ExplorationOutcome analyze(Simulation simulation) {
         int dimension = simulation.map().getDimension();
-        if (simulation.getRover().getScannedCoordinates().size() >= (Math.pow(dimension, 2)) * maxPercentageMapExploration) {
+        if (simulation.getRovers().get(0).getScannedCoordinates().size() >= (Math.pow(dimension, 2)) * maxPercentageMapExploration) {
             return ExplorationOutcome.LACK_OF_RESOURCES;
         } else return null;
     }

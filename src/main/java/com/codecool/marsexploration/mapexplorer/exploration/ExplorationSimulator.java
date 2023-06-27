@@ -12,6 +12,7 @@ import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverStatus;
 import com.codecool.marsexploration.mapexplorer.service.CoordinateCalculatorService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -39,10 +40,10 @@ public class ExplorationSimulator {
         this.explorationsRepository = explorationsRepository;
     }
 
-    public void runSimulation(ConfigurationParameters configurationParameters, Rover rover) {
+    public void runSimulation(ConfigurationParameters configurationParameters, List<Rover> rovers) {
         Simulation simulation = new Simulation(
                 configurationParameters.maxSteps(),
-                rover,
+                rovers,
                 configurationParameters.spaceshipLandingPoint(),
                 mapLoader.load(configurationParameters.mapPath()),
                 configurationParameters.symbols()
@@ -53,15 +54,17 @@ public class ExplorationSimulator {
         while (simulation.explorationOutcome() == null) {
             movementService.move();
 
-            configurationParameters.symbols().forEach(rover::checkForObjectsAround);
-            rover.addScannedCoordinates();
+//            configurationParameters.symbols().forEach(rover::checkForObjectsAround);
+            configurationParameters.symbols().forEach(symbol -> rovers.forEach(rover -> rover.checkForObjectsAround(symbol)));
+
+            rovers.forEach(Rover::addScannedCoordinates);
 
             ExplorationOutcome explorationOutcome = allOutcomeAnalyzer.analyze(simulation);
 
             simulationStepsLogging.logSteps();
 
             if (explorationOutcome != null) {
-                int numberOfResources = rover.getObjectsPoints().values().stream().mapToInt(Set::size).sum();
+                int numberOfResources = rovers.get(0).getObjectsPoints().values().stream().mapToInt(Set::size).sum();
                 ExplorationsDto explorationsDto = new ExplorationsDto(simulation.numberOfSteps(), numberOfResources, explorationOutcome);
                 explorationsRepository.saveInDatabase(explorationsDto);
                 simulation.setExplorationOutcome(explorationOutcome);
@@ -70,44 +73,52 @@ public class ExplorationSimulator {
             simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
         }
 
-        explorationResultDisplay.displayExploredMap(rover);
+        explorationResultDisplay.displayExploredMap(rovers.get(0));
 
         if (simulation.explorationOutcome() == ExplorationOutcome.COLONIZABLE) {
-            simulation.getRover().setRoverStatus(RoverStatus.GO_TO_RESOURCE);
+            simulation.getRovers().get(0).setRoverStatus(RoverStatus.GO_TO_RESOURCE);
             runColonization(configurationParameters, simulation);
         }
 
     }
 
     private void runColonization(ConfigurationParameters configurationParameters, Simulation simulation) {
-        simulation.getRover().createMineralPoints();
+        simulation.getRovers().get(0).createMineralPoints();
 
         Random random = new Random();
 
-        Coordinate randomMineralPoint = simulation.getRover().getMineralPoints().get(random.nextInt(simulation.getRover().getMineralPoints().size() - 1));
+        Coordinate randomMineralPoint = simulation.getRovers().get(0).getMineralPoints().get(random.nextInt(simulation.getRovers().get(0).getMineralPoints().size() - 1));
         List<Coordinate> randomMineralAdjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(randomMineralPoint, simulation.map().getDimension());
 
-        while (!randomMineralAdjacentCoordinates.contains(simulation.getRover().getPosition())) {
-            moveToCoordinate(randomMineralPoint, simulation.getRover());
-            configurationParameters.symbols().forEach(simulation.getRover()::checkForObjectsAround);
-            simulation.getRover().addScannedCoordinates();
-            explorationResultDisplay.displayExploredMap(simulation.getRover());
+        while (!randomMineralAdjacentCoordinates.contains(simulation.getRovers().get(0).getPosition())) {
+            moveToCoordinate(randomMineralPoint, simulation.getRovers().get(0));
+            configurationParameters.symbols().forEach(simulation.getRovers().get(0)::checkForObjectsAround);
+            simulation.getRovers().get(0).addScannedCoordinates();
+            explorationResultDisplay.displayExploredMap(simulation.getRovers().get(0));
             simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
         }
 
-        simulation.getRover().setRoverStatus(RoverStatus.EXTRACT);
+        simulation.getRovers().get(0).setRoverStatus(RoverStatus.EXTRACT);
         simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
 
-        simulation.getRover().setRoverStatus(RoverStatus.BUILD_BASE);
+        extractMineral(simulation.getRovers().get(0), randomMineralPoint);
+
+        System.out.println(Arrays.toString(simulation.getRovers().get(0).getResourceInventory()));
+
+        simulation.getRovers().get(0).setRoverStatus(RoverStatus.BUILD_BASE);
 
         // pewnie osobna metoda
-        CommandCenter commandCenter = new CommandCenter("1", simulation.getRover().getPosition());
+        CommandCenter commandCenter = new CommandCenter("1", simulation.getRovers().get(0).getPosition());
         // podmienić symbol na mapie na symbol bazy
 
         //
-        System.out.println(randomMineralPoint);
-        System.out.println(simulation.getRover().getPosition());
+//        System.out.println(randomMineralPoint);
+//        System.out.println(simulation.getRover().getPosition());
 
+    }
+
+    private void extractMineral(Rover rover, Coordinate randomMineralPoint) {
+        rover.addToResourceInventory(randomMineralPoint);
     }
 
     private void moveToCoordinate(Coordinate randomMineralPoint, Rover rover) {

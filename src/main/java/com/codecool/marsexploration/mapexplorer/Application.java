@@ -53,6 +53,7 @@ public class Application {
         Coordinate roverStartingSpot = roverPlacement.generateCoordinateForRover();
         int sightRange = 2;
         Rover rover = new Rover(roverId, roverStartingSpot, sightRange, map);
+        List<Rover> rovers = List.of(rover);
 
         MovementService movementService = new RandomAvoidingRevisitingMovementService(rover, map);
 
@@ -65,7 +66,7 @@ public class Application {
 
         if (configurationValidator.validate(configurationParameters)) {
             System.out.println("Configuration validation successful. Starting simulation.");
-            explorationSimulator.runSimulation(configurationParameters, rover);
+            explorationSimulator.runSimulation(configurationParameters, rovers);
         } else {
             System.out.println("Configuration validation failed. Simulation will not run.");
         }

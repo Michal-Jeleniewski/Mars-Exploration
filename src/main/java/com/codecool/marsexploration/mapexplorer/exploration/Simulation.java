@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Simulation {
     private final int stepsToTimeout;
-    private final Rover rover;
+    private final List<Rover> rovers;
     private final Coordinate spaceshipCoordinate;
     private final Map map;
     private final List<String> resourcesToMonitor;
@@ -17,12 +17,12 @@ public class Simulation {
     private ExplorationOutcome explorationOutcome;
 
     public Simulation(int stepsToTimeout,
-                      Rover rover,
+                      List<Rover> rovers,
                       Coordinate spaceshipCoordinate,
                       Map map,
                       List<String> resourcesToMonitor) {
         this.stepsToTimeout = stepsToTimeout;
-        this.rover = rover;
+        this.rovers = rovers;
         this.spaceshipCoordinate = spaceshipCoordinate;
         this.map = map;
         this.resourcesToMonitor = resourcesToMonitor;
@@ -38,8 +38,8 @@ public class Simulation {
         return stepsToTimeout;
     }
 
-    public Rover getRover() {
-        return rover;
+    public List<Rover> getRovers() {
+        return rovers;
     }
 
     public Coordinate getSpaceshipCoordinate() {
@@ -63,7 +63,7 @@ public class Simulation {
         return "Simulation[\n" +
                 "numberOfSteps=" + numberOfSteps + ",\n " +
                 "stepsToTimeout=" + stepsToTimeout + ",\n " +
-                "rover=" + rover + ", " +
+                "rover=" + rovers + ", " +
                 "spaceshipCoordinate=" + spaceshipCoordinate + ",\n " +
                 "map=" + map + ",\n " +
                 "resourcesToMonitor=" + resourcesToMonitor + ",\n " +

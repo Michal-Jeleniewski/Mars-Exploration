@@ -15,18 +15,20 @@ public class SimulationStepsLogging {
     }
 
     public void logSteps() {
-        StringBuilder stringBuilder = new StringBuilder();
+        simulation.getRovers().forEach(rover -> {
+            StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append("STEP ").append(simulation.numberOfSteps()).append(";");
+            stringBuilder.append("STEP ").append(simulation.numberOfSteps()).append(";");
 
-        if (allOutcomeAnalyzer.analyze(simulation) == null) {
-            stringBuilder.append(" EVENT position;");
-        } else {
-            stringBuilder.append(" EVENT OUTCOME ").append(allOutcomeAnalyzer.analyze(simulation)).append(";");
-        }
+            if (allOutcomeAnalyzer.analyze(simulation) == null) {
+                stringBuilder.append(" EVENT position;");
+            } else {
+                stringBuilder.append(" EVENT OUTCOME ").append(allOutcomeAnalyzer.analyze(simulation)).append(";");
+            }
 
-        stringBuilder.append(" UNIT " ).append(simulation.getRover().getId()).append(";");
-        stringBuilder.append(" POSITION ").append(simulation.getRover().getPosition()).append(";");
-        logger.log(stringBuilder.toString());
+            stringBuilder.append(" UNIT " ).append(rover.getId()).append(";");
+            stringBuilder.append(" POSITION ").append(rover.getPosition()).append(";");
+            logger.log(stringBuilder.toString());
+        });
     }
 }
