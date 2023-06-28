@@ -1,9 +1,12 @@
 package com.codecool.marsexploration.mapexplorer.colonization;
 
+import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
 import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationParameters;
 import com.codecool.marsexploration.mapexplorer.exploration.ExplorationResultDisplay;
 import com.codecool.marsexploration.mapexplorer.exploration.Simulation;
+import com.codecool.marsexploration.mapexplorer.exploration.SimulationStepsLogging;
+import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Symbol;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
@@ -25,18 +28,23 @@ public class ColonizationSimulation {
     private final ConfigurationParameters configurationParameters;
     private final Random random;
     private final MoveToCoordinateService moveToCoordinateService;
+    private final Logger logger;
+    private final AllOutcomeAnalyzer allOutcomeAnalyzer;
 
-    public ColonizationSimulation(ExplorationResultDisplay explorationResultDisplay, Simulation simulation, ConfigurationParameters configurationParameters, MoveToCoordinateService moveToCoordinateService) {
+    public ColonizationSimulation(ExplorationResultDisplay explorationResultDisplay, Simulation simulation, ConfigurationParameters configurationParameters, MoveToCoordinateService moveToCoordinateService, Logger logger, AllOutcomeAnalyzer allOutcomeAnalyzer) {
         this.explorationResultDisplay = explorationResultDisplay;
         this.simulation = simulation;
         this.configurationParameters = configurationParameters;
         this.moveToCoordinateService = moveToCoordinateService;
+        this.logger = logger;
+        this.allOutcomeAnalyzer = allOutcomeAnalyzer;
         this.random = new Random();
     }
 
     public void runColonization() {
         boolean isRunning = true;
         List<Rover> rovers = simulation.getRovers();
+        SimulationStepsLogging simulationStepsLogging = new SimulationStepsLogging(simulation, logger, allOutcomeAnalyzer);
         prepareFirstRover(rovers.get(0));
         while (isRunning) {
             try {
@@ -106,6 +114,7 @@ public class ColonizationSimulation {
                 setupNewRower(newRover);
                 simulation.addRover(newRover);
             }
+            simulationStepsLogging.logSteps();
 
             if (colonizationEndCondition(rovers)) {
                 isRunning = false;
