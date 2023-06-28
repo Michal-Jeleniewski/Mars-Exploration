@@ -92,7 +92,5 @@ public class RoverStatusManagment {
     private static void setupRoverToExtract(Rover rover) {
         rover.clearInventory();
         rover.setRoverStatus(GO_TO_RESOURCE);
-        Coordinate randomMineralPoint = rover.getMineralPoints().get(new Random().nextInt(rover.getMineralPoints().size() - 1));
-        rover.setDestination(randomMineralPoint);
     }
 }

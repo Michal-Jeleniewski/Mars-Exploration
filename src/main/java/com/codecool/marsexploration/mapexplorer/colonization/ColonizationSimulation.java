@@ -15,7 +15,7 @@ import static com.codecool.marsexploration.mapexplorer.rovers.RoverStatus.GO_TO_
 
 public class ColonizationSimulation {
 
-    public static final int MINERALS_NEEDED_FOR_NEW_ROVER = 3;
+    public static final int MINERALS_NEEDED_FOR_NEW_ROVER = 5;
     public static final int ROVERS_REQUIRED = 5;
     private final ExplorationResultDisplay explorationResultDisplay;
     private final Simulation simulation;
@@ -83,7 +83,10 @@ public class ColonizationSimulation {
         newRover.setMineralPoints(simulation.getCommandCenter().getMineralPoints());
         newRover.setScannedCoordinates(simulation.getCommandCenter().getScannedCoordinates());
         newRover.setObjectsPoints(simulation.getCommandCenter().getObjectsPoints());
-        Coordinate randomMineralPoint = newRover.getMineralPoints().get(new Random().nextInt(newRover.getMineralPoints().size() - 1));
+        Coordinate randomMineralPoint = newRover.getMineralPoints().get(new Random().nextInt(newRover.getMineralPoints().size()));
+        List<Coordinate> remainingMineralPoints = simulation.getCommandCenter().getMineralPoints();
+        remainingMineralPoints.remove(randomMineralPoint);
+        simulation.getCommandCenter().setMineralPoints(remainingMineralPoints);
         newRover.setDestination(randomMineralPoint);
     }
 
@@ -105,7 +108,10 @@ public class ColonizationSimulation {
     private void prepareFirstRover(Rover rover) {
         rover.setRoverStatus(RoverStatus.GO_TO_RESOURCE);
         rover.createMineralPoints();
-        Coordinate randomMineralPoint = rover.getMineralPoints().get(random.nextInt(rover.getMineralPoints().size() - 1));
+        Coordinate randomMineralPoint = rover.getMineralPoints().get(random.nextInt(rover.getMineralPoints().size()));
+        List<Coordinate> remainingMineralPoints = rover.getMineralPoints();
+        remainingMineralPoints.remove(randomMineralPoint);
+        rover.setMineralPoints(remainingMineralPoints);
         rover.setDestination(randomMineralPoint);
     }
 
