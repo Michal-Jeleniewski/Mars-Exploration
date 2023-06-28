@@ -15,8 +15,10 @@ import com.codecool.marsexploration.mapexplorer.maploader.model.Map;
 import com.codecool.marsexploration.mapexplorer.repository.ExplorationsRepository;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverPlacement;
+import com.codecool.marsexploration.mapexplorer.rovers.RoverStatus;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import static com.codecool.marsexploration.mapexplorer.maploader.model.Symbol.*;
