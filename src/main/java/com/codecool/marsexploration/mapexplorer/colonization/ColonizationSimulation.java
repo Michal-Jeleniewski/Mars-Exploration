@@ -1,10 +1,7 @@
 package com.codecool.marsexploration.mapexplorer.colonization;
 
-<<<<<<< HEAD
+
 import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
-import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
-=======
->>>>>>> origin/development
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationParameters;
 import com.codecool.marsexploration.mapexplorer.exploration.ExplorationResultDisplay;
 import com.codecool.marsexploration.mapexplorer.exploration.Simulation;
