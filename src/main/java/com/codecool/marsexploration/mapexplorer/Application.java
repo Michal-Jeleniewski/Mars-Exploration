@@ -2,10 +2,7 @@ package com.codecool.marsexploration.mapexplorer;
 
 import com.codecool.marsexploration.mapexplorer.analizer.*;
 import com.codecool.marsexploration.mapexplorer.configuration.*;
-import com.codecool.marsexploration.mapexplorer.exploration.ExplorationResultDisplay;
-import com.codecool.marsexploration.mapexplorer.exploration.ExplorationSimulator;
-import com.codecool.marsexploration.mapexplorer.exploration.MovementService;
-import com.codecool.marsexploration.mapexplorer.exploration.RandomAvoidingRevisitingMovementService;
+import com.codecool.marsexploration.mapexplorer.exploration.*;
 import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.logger.LoggerImpl;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
@@ -15,8 +12,10 @@ import com.codecool.marsexploration.mapexplorer.maploader.model.Map;
 import com.codecool.marsexploration.mapexplorer.repository.ExplorationsRepository;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverPlacement;
+import com.codecool.marsexploration.mapexplorer.rovers.RoverStatus;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import static com.codecool.marsexploration.mapexplorer.maploader.model.Symbol.*;
@@ -65,7 +64,11 @@ public class Application {
 
         if (configurationValidator.validate(configurationParameters)) {
             System.out.println("Configuration validation successful. Starting simulation.");
-            explorationSimulator.runSimulation(configurationParameters, rovers);
+            Simulation simulation = explorationSimulator.runSimulation(configurationParameters, rovers);
+            if (simulation.explorationOutcome() == ExplorationOutcome.COLONIZABLE) {
+                ColonizationSimulation colonizationSimulation = new ColonizationSimulation(explorationResultDisplay, simulation, configurationParameters);
+                colonizationSimulation.runColonization();
+            }
         } else {
             System.out.println("Configuration validation failed. Simulation will not run.");
         }
