@@ -1,11 +1,11 @@
 package com.codecool.marsexploration.mapexplorer;
 
 import com.codecool.marsexploration.mapexplorer.analizer.*;
+import com.codecool.marsexploration.mapexplorer.colonization.ColonizationSimulation;
+import com.codecool.marsexploration.mapexplorer.colonization.MoveToCoordinateService;
+import com.codecool.marsexploration.mapexplorer.colonization.SimpleMoveToCoordinateService;
 import com.codecool.marsexploration.mapexplorer.configuration.*;
-import com.codecool.marsexploration.mapexplorer.exploration.ExplorationResultDisplay;
-import com.codecool.marsexploration.mapexplorer.exploration.ExplorationSimulator;
-import com.codecool.marsexploration.mapexplorer.exploration.MovementService;
-import com.codecool.marsexploration.mapexplorer.exploration.RandomAvoidingRevisitingMovementService;
+import com.codecool.marsexploration.mapexplorer.exploration.*;
 import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.logger.LoggerImpl;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
@@ -65,7 +65,12 @@ public class Application {
 
         if (configurationValidator.validate(configurationParameters)) {
             System.out.println("Configuration validation successful. Starting simulation.");
-            explorationSimulator.runSimulation(configurationParameters, rovers);
+            Simulation simulation = explorationSimulator.runSimulation(configurationParameters, rovers);
+            if (simulation.explorationOutcome() == ExplorationOutcome.COLONIZABLE) {
+                MoveToCoordinateService moveToCoordinateService = new SimpleMoveToCoordinateService();
+                ColonizationSimulation colonizationSimulation = new ColonizationSimulation(explorationResultDisplay, simulation, configurationParameters, moveToCoordinateService);
+                colonizationSimulation.runColonization();
+            }
         } else {
             System.out.println("Configuration validation failed. Simulation will not run.");
         }
