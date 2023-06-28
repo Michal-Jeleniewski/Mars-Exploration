@@ -12,11 +12,10 @@ public class Rover {
     private final List<Coordinate> previousPositions;
     private static int numberOfRovers = 1;
     private final String id;
-    private final java.util.Map<String, Set<Coordinate>> objectsPoints;
-
+    private java.util.Map<String, Set<Coordinate>> objectsPoints;
     private final Map map;
     private final int sightRange;
-    private final Set<Coordinate> scannedCoordinates;
+    private Set<Coordinate> scannedCoordinates;
     private Coordinate position;
     private List<Coordinate> mineralPoints;
     private RoverStatus roverStatus;
@@ -55,8 +54,16 @@ public class Rover {
         return scannedCoordinates;
     }
 
+    public void setScannedCoordinates(Set<Coordinate> scannedCoordinates) {
+        this.scannedCoordinates = scannedCoordinates;
+    }
+
     public java.util.Map<String, Set<Coordinate>> getObjectsPoints() {
         return objectsPoints;
+    }
+
+    public void setObjectsPoints(java.util.Map<String, Set<Coordinate>> objectsPoints) {
+        this.objectsPoints = objectsPoints;
     }
 
     public void addScannedCoordinates() {
@@ -96,6 +103,10 @@ public class Rover {
 
     public List<Coordinate> getMineralPoints() {
         return mineralPoints;
+    }
+
+    public void setMineralPoints(List<Coordinate> mineralPoints) {
+        this.mineralPoints = mineralPoints;
     }
 
     public Coordinate getPosition() {

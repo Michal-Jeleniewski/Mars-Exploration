@@ -6,6 +6,7 @@ import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Map;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Simulation {
@@ -24,7 +25,7 @@ public class Simulation {
                       Map map,
                       List<String> resourcesToMonitor) {
         this.stepsToTimeout = stepsToTimeout;
-        this.rovers = rovers;
+        this.rovers = new ArrayList<>(rovers);
         this.spaceshipCoordinate = spaceshipCoordinate;
         this.map = map;
         this.resourcesToMonitor = resourcesToMonitor;
@@ -43,6 +44,10 @@ public class Simulation {
 
     public List<Rover> getRovers() {
         return rovers;
+    }
+
+    public void addRover(Rover rover) {
+        rovers.add(rover);
     }
 
     public Coordinate getSpaceshipCoordinate() {
