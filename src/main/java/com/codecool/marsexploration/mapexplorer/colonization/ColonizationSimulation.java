@@ -1,14 +1,16 @@
 package com.codecool.marsexploration.mapexplorer.colonization;
 
+<<<<<<< HEAD
 import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
 import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
+=======
+>>>>>>> origin/development
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationParameters;
 import com.codecool.marsexploration.mapexplorer.exploration.ExplorationResultDisplay;
 import com.codecool.marsexploration.mapexplorer.exploration.Simulation;
 import com.codecool.marsexploration.mapexplorer.exploration.SimulationStepsLogging;
 import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
-import com.codecool.marsexploration.mapexplorer.maploader.model.Symbol;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverStatus;
 import com.codecool.marsexploration.mapexplorer.service.CoordinateCalculatorService;
@@ -16,12 +18,11 @@ import com.codecool.marsexploration.mapexplorer.service.CoordinateCalculatorServ
 import java.util.List;
 import java.util.Random;
 
-import static com.codecool.marsexploration.mapexplorer.rovers.RoverStatus.*;
 import static com.codecool.marsexploration.mapexplorer.rovers.RoverStatus.GO_TO_RESOURCE;
 
 public class ColonizationSimulation {
 
-    public static final int MINERALS_NEEDED_FOR_NEW_ROVER = 3;
+    public static final int MINERALS_NEEDED_FOR_NEW_ROVER = 5;
     public static final int ROVERS_REQUIRED = 5;
     private final ExplorationResultDisplay explorationResultDisplay;
     private final Simulation simulation;
@@ -53,56 +54,14 @@ public class ColonizationSimulation {
                 throw new RuntimeException(e);
             }
             rovers.forEach(rover -> {
+                RoverStatusManagment roverStatusManagment = new RoverStatusManagment(rover, moveToCoordinateService, configurationParameters, simulation);
                 switch (rover.getRoverStatus()) {
-                    case GO_TO_RESOURCE:
-
-                        List<Coordinate> randomMineralAdjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(rover.getDestination(), simulation.getMap().getDimension());
-
-                        if (randomMineralAdjacentCoordinates.contains(rover.getPosition())) {
-                            rover.setRoverStatus(EXTRACT);
-                        } else {
-                            moveToCoordinateService.moveToCoordinate(rover.getDestination(), rover);
-                            configurationParameters.symbols().forEach(rover::checkForObjectsAround);
-                            rover.addScannedCoordinates();
-                        }
-
-                        break;
-
-                    case EXTRACT:
-
-                        extractMineral(rover, rover.getDestination());
-                        if (simulation.getCommandCenter() == null) {
-                            rover.setRoverStatus(BUILD_BASE);
-                        } else {
-                            rover.setRoverStatus(GO_TO_BASE);
-                        }
-                        break;
-
-                    case BUILD_BASE:
-
-                        simulation.setCommandCenter(new CommandCenter(getNewCommandCenterCoordinate(rover), rover.getMineralPoints(), rover.getObjectsPoints(), rover.getScannedCoordinates()));
-                        rover.clearInventory();
-                        rover.saveObjectPoint(simulation.getCommandCenter().getCommandCenterPosition(), Symbol.BASE.getSymbol());
-                        rover.setRoverStatus(GO_TO_RESOURCE);
-                        break;
-
-                    case GO_TO_BASE:
-                        List<Coordinate> baseAdjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(simulation.getCommandCenter().getCommandCenterPosition(), simulation.getMap().getDimension());
-                        configurationParameters.symbols().forEach(rover::checkForObjectsAround);
-                        rover.addScannedCoordinates();
-                        if (baseAdjacentCoordinates.contains(rover.getPosition())) {
-                            rover.setRoverStatus(DEPOSIT_RESOURCE);
-                        } else {
-                            moveToCoordinateService.moveToCoordinate(simulation.getCommandCenter().getCommandCenterPosition(), rover);
-                        }
-                        break;
-
-                    case DEPOSIT_RESOURCE:
-                        simulation.getCommandCenter().addMineral();
-                        setupRoverToExtract(rover);
-                        break;
+                    case GO_TO_RESOURCE -> roverStatusManagment.goToResource();
+                    case EXTRACT -> roverStatusManagment.extract();
+                    case BUILD_BASE -> roverStatusManagment.buildBase();
+                    case GO_TO_BASE -> roverStatusManagment.goToBase();
+                    case DEPOSIT_RESOURCE -> roverStatusManagment.depositResource();
                 }
-
             });
 
             explorationResultDisplay.displayExploredMap(simulation);
@@ -122,12 +81,7 @@ public class ColonizationSimulation {
         }
     }
 
-    private static void setupRoverToExtract(Rover rover) {
-        rover.clearInventory();
-        rover.setRoverStatus(GO_TO_RESOURCE);
-        Coordinate randomMineralPoint = rover.getMineralPoints().get(new Random().nextInt(rover.getMineralPoints().size() - 1));
-        rover.setDestination(randomMineralPoint);
-    }
+
 
     private boolean colonizationEndCondition(List<Rover> rovers) {
         return simulation.getCommandCenter() != null && rovers.size() >= ROVERS_REQUIRED;
@@ -142,7 +96,10 @@ public class ColonizationSimulation {
         newRover.setMineralPoints(simulation.getCommandCenter().getMineralPoints());
         newRover.setScannedCoordinates(simulation.getCommandCenter().getScannedCoordinates());
         newRover.setObjectsPoints(simulation.getCommandCenter().getObjectsPoints());
-        Coordinate randomMineralPoint = newRover.getMineralPoints().get(new Random().nextInt(newRover.getMineralPoints().size() - 1));
+        Coordinate randomMineralPoint = newRover.getMineralPoints().get(new Random().nextInt(newRover.getMineralPoints().size()));
+        List<Coordinate> remainingMineralPoints = simulation.getCommandCenter().getMineralPoints();
+        remainingMineralPoints.remove(randomMineralPoint);
+        simulation.getCommandCenter().setMineralPoints(remainingMineralPoints);
         newRover.setDestination(randomMineralPoint);
     }
 
@@ -156,26 +113,20 @@ public class ColonizationSimulation {
         List<Coordinate> baseFreeAdjacentCoordinates = baseAdjacentCoordinates.stream()
                 .filter(coordinate -> simulation.getMap().isEmpty(coordinate))
                 .toList();
-        Coordinate newRoverCoordinate = baseFreeAdjacentCoordinates.get(random.nextInt(baseFreeAdjacentCoordinates.size()));
-        return newRoverCoordinate;
+        return baseFreeAdjacentCoordinates.get(random.nextInt(baseFreeAdjacentCoordinates.size()));
     }
 
-    private Coordinate getNewCommandCenterCoordinate(Rover rover) {
-        List<Coordinate> roverAdjacentCoordinates = CoordinateCalculatorService.getAdjacentCoordinates(rover.getPosition(), simulation.getMap().getDimension());
-        List<Coordinate> freeRoverAdjacentCoordinates = roverAdjacentCoordinates.stream().
-                filter(simulation.getMap()::isEmpty)
-                .toList();
-        return freeRoverAdjacentCoordinates.get(new Random().nextInt(freeRoverAdjacentCoordinates.size()));
-    }
+
 
     private void prepareFirstRover(Rover rover) {
         rover.setRoverStatus(RoverStatus.GO_TO_RESOURCE);
         rover.createMineralPoints();
-        Coordinate randomMineralPoint = rover.getMineralPoints().get(random.nextInt(rover.getMineralPoints().size() - 1));
+        Coordinate randomMineralPoint = rover.getMineralPoints().get(random.nextInt(rover.getMineralPoints().size()));
+        List<Coordinate> remainingMineralPoints = rover.getMineralPoints();
+        remainingMineralPoints.remove(randomMineralPoint);
+        rover.setMineralPoints(remainingMineralPoints);
         rover.setDestination(randomMineralPoint);
     }
 
-    private void extractMineral(Rover rover, Coordinate randomMineralPoint) {
-        rover.addToResourceInventory(randomMineralPoint);
-    }
+
 }

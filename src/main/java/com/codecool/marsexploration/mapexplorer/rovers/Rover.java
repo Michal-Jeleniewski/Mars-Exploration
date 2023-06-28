@@ -135,7 +135,8 @@ public class Rover {
     }
 
     public void createMineralPoints() {
-        mineralPoints = objectsPoints.get(MINERAL.getSymbol()).stream().toList();
+        mineralPoints = new ArrayList<>(objectsPoints.get(MINERAL.getSymbol()).stream().toList());
+        ;
     }
 
     public List<Coordinate> getMineralPoints() {
