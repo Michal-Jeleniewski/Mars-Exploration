@@ -3,6 +3,7 @@ package com.codecool.marsexploration.mapexplorer;
 import com.codecool.marsexploration.mapexplorer.analizer.*;
 import com.codecool.marsexploration.mapexplorer.colonization.ColonizationSimulation;
 import com.codecool.marsexploration.mapexplorer.colonization.MoveToCoordinateService;
+import com.codecool.marsexploration.mapexplorer.colonization.RoverStatusManagment;
 import com.codecool.marsexploration.mapexplorer.colonization.SimpleMoveToCoordinateService;
 import com.codecool.marsexploration.mapexplorer.configuration.*;
 import com.codecool.marsexploration.mapexplorer.exploration.*;
