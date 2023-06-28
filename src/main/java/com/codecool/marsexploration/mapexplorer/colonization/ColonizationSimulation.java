@@ -169,4 +169,5 @@ public class ColonizationSimulation {
     private void extractMineral(Rover rover, Coordinate randomMineralPoint) {
         rover.addToResourceInventory(randomMineralPoint);
     }
+
 }
