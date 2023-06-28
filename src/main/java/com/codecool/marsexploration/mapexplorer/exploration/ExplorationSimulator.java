@@ -183,20 +183,6 @@ public class ExplorationSimulator {
                 isRunning = false;
             }
         }
-
-
-//        System.out.println(Arrays.toString(simulation.getRovers().get(0).getResourceInventory()));
-
-//        simulation.getRovers().get(0).setRoverStatus(RoverStatus.BUILD_BASE);
-
-        // pewnie osobna metoda
-//        CommandCenter commandCenter = new CommandCenter("1", simulation.getRovers().get(0).getPosition());
-        // podmienić symbol na mapie na symbol bazy
-
-        //
-//        System.out.println(randomMineralPoint);
-//        System.out.println(simulation.getRover().getPosition());
-
     }
 
     private void extractMineral(Rover rover, Coordinate randomMineralPoint) {

@@ -92,7 +92,7 @@ public class Rover {
         objectsPoints.put(resource, coordinateList);
     }
 
-    public Coordinate findBestPositionForComandCenter() {
+    public Coordinate findBestPositionForCommandCenter() {
         List<Coordinate> diamondPositions = new ArrayList<>();
 
         for (int x = 0; x < map.getRepresentation().length; x++) {
