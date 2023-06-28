@@ -8,7 +8,7 @@ import com.codecool.marsexploration.mapexplorer.service.CoordinateCalculatorServ
 import java.util.List;
 import java.util.Random;
 
-public class RandomAvoidingRevisitingMovementService implements MovementService{
+public class RandomAvoidingRevisitingMovementService implements MovementService {
     private final Rover rover;
     private final Map map;
     private final Random random;
@@ -18,6 +18,7 @@ public class RandomAvoidingRevisitingMovementService implements MovementService{
         this.map = map;
         random = new Random();
     }
+
     @Override
     public void move() {
         Coordinate currentRoverPosition = rover.getPosition();
@@ -30,13 +31,14 @@ public class RandomAvoidingRevisitingMovementService implements MovementService{
                 .filter(map::isEmpty)
                 .toList();
 
-        List<Coordinate> freeNotVisitedAdjacentCoordinates = freeAdjacentCoordinates.stream().filter(coordinate -> !rover.getPreviousPositions().contains(coordinate)).toList();
+        List<Coordinate> freeNotVisitedAdjacentCoordinates = freeAdjacentCoordinates.stream()
+                .filter(coordinate -> !rover.getPreviousPositions().contains(coordinate)).toList();
 
         if (!freeNotVisitedAdjacentCoordinates.isEmpty()) {
-            Coordinate randomFreeNotVisitedAdjacentCoordinate = freeNotVisitedAdjacentCoordinates.get(random.nextInt(freeNotVisitedAdjacentCoordinates.size()));
+            Coordinate randomFreeNotVisitedAdjacentCoordinate = freeNotVisitedAdjacentCoordinates
+                    .get(random.nextInt(freeNotVisitedAdjacentCoordinates.size()));
             rover.setPosition(randomFreeNotVisitedAdjacentCoordinate);
-        }
-        else {
+        } else {
             Coordinate randomFreeAdjacentCoordinate = freeAdjacentCoordinates.get(random.nextInt(freeAdjacentCoordinates.size()));
             rover.setPosition(randomFreeAdjacentCoordinate);
         }
