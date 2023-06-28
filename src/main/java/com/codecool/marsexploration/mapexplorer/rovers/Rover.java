@@ -13,7 +13,6 @@ public class Rover {
     private static int numberOfRovers = 1;
     private final String id;
     private final java.util.Map<String, Set<Coordinate>> objectsPoints;
-
     private final Map map;
     private final int sightRange;
     private final Set<Coordinate> scannedCoordinates;
@@ -36,7 +35,6 @@ public class Rover {
         roverStatus = RoverStatus.EXPLORE;
         numberOfRovers++;
     }
-
 
 
     public List<Coordinate> getPreviousPositions() {
@@ -84,6 +82,44 @@ public class Rover {
         }
         coordinateList.add(coordinate);
         objectsPoints.put(resource, coordinateList);
+    }
+
+    public Coordinate findBestPositionForComandCenter() {
+        List<Coordinate> diamondPositions = new ArrayList<>();
+
+        for (int x = 0; x < map.getRepresentation().length; x++) {
+            for (int y = 0; y < map.getRepresentation().length; y++) {
+                if (map.getByCoordinate(new Coordinate(x, y)).equals("\uD83D\uDC8E")) {
+                    diamondPositions.add(new Coordinate(x, y));
+                }
+            }
+        }
+
+        Coordinate bestPosition = null;
+        double maxTotalDistance = 0;
+
+        for (int i = 0; i < map.getRepresentation().length; i++) {
+            for (int j = 0; j < map.getRepresentation().length; j++) {
+                Coordinate currentPosition = new Coordinate(i, j);
+                double totalDistance = 0;
+
+                for (Coordinate diamond : diamondPositions) {
+                    double distance = calculateDistance(currentPosition.X(), currentPosition.Y(), diamond.X(), diamond.Y());
+                    totalDistance += distance;
+                }
+
+                if (totalDistance > maxTotalDistance) {
+                    maxTotalDistance = totalDistance;
+                    bestPosition = currentPosition;
+                }
+            }
+        }
+
+        return bestPosition;
+    }
+
+    public double calculateDistance(int x1, int y1, int x2, int y2) {
+        return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
     }
 
     public void addToPreviousPositionsList(Coordinate coordinate) {
