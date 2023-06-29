@@ -37,6 +37,10 @@ public class CommandCenter {
         numberOfBases++;
     }
 
+    public void setMineralPoints(List<Coordinate> mineralPoints) {
+        this.mineralPoints = mineralPoints;
+    }
+
     public Coordinate getCommandCenterPosition() {
         return commandCenterPosition;
     }

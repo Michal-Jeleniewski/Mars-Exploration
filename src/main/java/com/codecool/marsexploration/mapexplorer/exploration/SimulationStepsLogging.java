@@ -24,6 +24,7 @@ public class SimulationStepsLogging {
                 stringBuilder.append(" EVENT position;");
             } else {
                 stringBuilder.append(" EVENT OUTCOME ").append(allOutcomeAnalyzer.analyze(simulation)).append(";");
+                stringBuilder.append(" STATUS ").append(rover.getRoverStatus()).append(";");
             }
 
             stringBuilder.append(" UNIT " ).append(rover.getId()).append(";");

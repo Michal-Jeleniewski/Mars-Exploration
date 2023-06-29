@@ -26,7 +26,7 @@ public class Application {
     private static final String JDBC_DATABASE_URL = "jdbc:sqlite:src/main/resources/exploration.db";
 
     public static void main(String[] args) {
-        String mapFile = workDir + "/resources/exploration-0.map";
+        String mapFile = workDir + "/resources/exploration-2.map";
         Coordinate landingSpot = new Coordinate(6, 6);
         List<String> objectsToScan = List.of(MINERAL.getSymbol(), WATER.getSymbol(), MOUNTAIN.getSymbol(), PIT.getSymbol());
         int maxSteps = 1000;
@@ -74,6 +74,7 @@ public class Application {
             Simulation simulation = explorationSimulator.runSimulation(configurationParameters, rovers);
             if (simulation.explorationOutcome() == ExplorationOutcome.COLONIZABLE) {
                 MoveToCoordinateService moveToCoordinateService = new SimpleMoveToCoordinateService();
+                ColonizationSimulation colonizationSimulation = new ColonizationSimulation(explorationResultDisplay, simulation, configurationParameters, moveToCoordinateService, logger, allOutcomeAnalyzer);
                 ColonizationSimulation colonizationSimulation = new ColonizationSimulation(explorationResultDisplay, simulation, configurationParameters, moveToCoordinateService, colonizationRepository, commandCenterRepository, roversRepository);
                 colonizationSimulation.runColonization();
             }
