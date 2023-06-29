@@ -74,8 +74,7 @@ public class Application {
             Simulation simulation = explorationSimulator.runSimulation(configurationParameters, rovers);
             if (simulation.explorationOutcome() == ExplorationOutcome.COLONIZABLE) {
                 MoveToCoordinateService moveToCoordinateService = new SimpleMoveToCoordinateService();
-                ColonizationSimulation colonizationSimulation = new ColonizationSimulation(explorationResultDisplay, simulation, configurationParameters, moveToCoordinateService, logger, allOutcomeAnalyzer);
-                ColonizationSimulation colonizationSimulation = new ColonizationSimulation(explorationResultDisplay, simulation, configurationParameters, moveToCoordinateService, colonizationRepository, commandCenterRepository, roversRepository);
+                ColonizationSimulation colonizationSimulation = new ColonizationSimulation(explorationResultDisplay, simulation, configurationParameters, moveToCoordinateService, logger, allOutcomeAnalyzer, commandCenterRepository, roversRepository, colonizationRepository);
                 colonizationSimulation.runColonization();
             }
         } else {

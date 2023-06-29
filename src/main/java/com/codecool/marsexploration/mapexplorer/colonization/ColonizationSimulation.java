@@ -1,5 +1,6 @@
 package com.codecool.marsexploration.mapexplorer.colonization;
 
+import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
 import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationParameters;
 import com.codecool.marsexploration.mapexplorer.exploration.ExplorationResultDisplay;
@@ -28,15 +29,23 @@ public class ColonizationSimulation {
     private final MoveToCoordinateService moveToCoordinateService;
     private final Logger logger;
     private final AllOutcomeAnalyzer allOutcomeAnalyzer;
+    private final ColonizationRepository colonizationRepository;
+    private final RoversRepository roversRepository;
+    private final CommandCenterRepository commandCenterRepository;
+    private final UUID id;
 
-    public ColonizationSimulation(ExplorationResultDisplay explorationResultDisplay, Simulation simulation, ConfigurationParameters configurationParameters, MoveToCoordinateService moveToCoordinateService, Logger logger, AllOutcomeAnalyzer allOutcomeAnalyzer) {
+    public ColonizationSimulation(ExplorationResultDisplay explorationResultDisplay, Simulation simulation, ConfigurationParameters configurationParameters, MoveToCoordinateService moveToCoordinateService, Logger logger, AllOutcomeAnalyzer allOutcomeAnalyzer, CommandCenterRepository commandCenterRepository, RoversRepository roversRepository, ColonizationRepository colonizationRepository) {
         this.explorationResultDisplay = explorationResultDisplay;
         this.simulation = simulation;
         this.configurationParameters = configurationParameters;
         this.moveToCoordinateService = moveToCoordinateService;
         this.logger = logger;
+        this.id = UUID.randomUUID();
         this.allOutcomeAnalyzer = allOutcomeAnalyzer;
         this.random = new Random();
+        this.commandCenterRepository = commandCenterRepository;
+        this.roversRepository = roversRepository;
+        this.colonizationRepository = colonizationRepository;
     }
 
     public void runColonization() {
@@ -45,11 +54,11 @@ public class ColonizationSimulation {
         SimulationStepsLogging simulationStepsLogging = new SimulationStepsLogging(simulation, logger, allOutcomeAnalyzer);
         prepareFirstRover(rovers.get(0));
         while (isRunning) {
-            try {
-                Thread.sleep(400);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+//            try {
+//                Thread.sleep(400);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
             rovers.forEach(rover -> {
                 RoverStatusManagment roverStatusManagment = new RoverStatusManagment(rover, moveToCoordinateService, configurationParameters, simulation);
                 switch (rover.getRoverStatus()) {
@@ -62,7 +71,7 @@ public class ColonizationSimulation {
 
             });
 
-            explorationResultDisplay.displayExploredMap(simulation);
+//            explorationResultDisplay.displayExploredMap(simulation);
             simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
 
             if (isPossibleToBuildNewRover()) {
@@ -74,6 +83,7 @@ public class ColonizationSimulation {
             simulationStepsLogging.logSteps();
 
             if (colonizationEndCondition(rovers)) {
+                manageDatabase();
                 isRunning = false;
             }
         }
