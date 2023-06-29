@@ -81,8 +81,9 @@ public class Application {
             System.out.println("Configuration validation failed. Simulation will not run.");
         }
     }
-    public static void createTablesIfDoesNotExist(List<Repository> repositories){
-        for(Repository repository : repositories){
+
+    public static void createTablesIfDoesNotExist(List<Repository> repositories) {
+        for (Repository repository : repositories) {
             repository.createTableIfDoesNotExist();
         }
     }

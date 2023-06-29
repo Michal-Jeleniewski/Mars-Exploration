@@ -1,20 +1,20 @@
 package com.codecool.marsexploration.mapexplorer.colonization;
 
 import com.codecool.marsexploration.mapexplorer.analizer.AllOutcomeAnalyzer;
-import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationParameters;
 import com.codecool.marsexploration.mapexplorer.exploration.ExplorationResultDisplay;
 import com.codecool.marsexploration.mapexplorer.exploration.Simulation;
 import com.codecool.marsexploration.mapexplorer.exploration.SimulationStepsLogging;
 import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
-import com.codecool.marsexploration.mapexplorer.maploader.model.Symbol;
 import com.codecool.marsexploration.mapexplorer.repository.*;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverStatus;
 import com.codecool.marsexploration.mapexplorer.service.CoordinateCalculatorService;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import static com.codecool.marsexploration.mapexplorer.rovers.RoverStatus.GO_TO_RESOURCE;
 
@@ -54,24 +54,25 @@ public class ColonizationSimulation {
         SimulationStepsLogging simulationStepsLogging = new SimulationStepsLogging(simulation, logger, allOutcomeAnalyzer);
         prepareFirstRover(rovers.get(0));
         while (isRunning) {
-//            try {
-//                Thread.sleep(400);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
+            try {
+                Thread.sleep(400);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             rovers.forEach(rover -> {
-                RoverStatusManagment roverStatusManagment = new RoverStatusManagment(rover, moveToCoordinateService, configurationParameters, simulation);
+                RoverStatusManagement roverStatusManagement = new RoverStatusManagement(rover, moveToCoordinateService, configurationParameters, simulation);
                 switch (rover.getRoverStatus()) {
-                    case GO_TO_RESOURCE -> roverStatusManagment.goToResource();
-                    case EXTRACT -> roverStatusManagment.extract();
-                    case BUILD_BASE -> roverStatusManagment.buildBase();
-                    case GO_TO_BASE -> roverStatusManagment.goToBase();
-                    case DEPOSIT_RESOURCE -> roverStatusManagment.depositResource();
+                    case GO_TO_RESOURCE -> roverStatusManagement.goToResource();
+                    case EXTRACT -> roverStatusManagement.extract();
+                    case GO_TO_NEW_BASE_LOCATION -> roverStatusManagement.goToNewBaseLocation();
+                    case BUILD_BASE -> roverStatusManagement.buildBase();
+                    case GO_TO_BASE -> roverStatusManagement.goToBase();
+                    case DEPOSIT_RESOURCE -> roverStatusManagement.depositResource();
                 }
 
             });
 
-//            explorationResultDisplay.displayExploredMap(simulation);
+            explorationResultDisplay.displayExploredMap(simulation);
             simulation.setNumberOfSteps(simulation.numberOfSteps() + 1);
 
             if (isPossibleToBuildNewRover()) {
@@ -89,8 +90,6 @@ public class ColonizationSimulation {
         }
     }
 
-
-
     private boolean colonizationEndCondition(List<Rover> rovers) {
         return simulation.getCommandCenter() != null && rovers.size() >= ROVERS_REQUIRED;
     }
@@ -102,7 +101,6 @@ public class ColonizationSimulation {
         colonizationRepository.saveInDatabase();
         commandCenterRepository.setCommandCenterDto(new CommandCenterDto(id, List.of(simulation.getCommandCenter()), MINERALS_NEEDED_FOR_NEW_ROVER));
         commandCenterRepository.saveInDatabase();
-
     }
 
     private boolean isPossibleToBuildNewRover() {
@@ -132,14 +130,10 @@ public class ColonizationSimulation {
         return baseFreeAdjacentCoordinates.get(random.nextInt(baseFreeAdjacentCoordinates.size()));
     }
 
-
-
     private void prepareFirstRover(Rover rover) {
         rover.setRoverStatus(RoverStatus.GO_TO_RESOURCE);
         rover.createMineralPoints();
         Coordinate randomMineralPoint = rover.getMineralPoints().get(random.nextInt(rover.getMineralPoints().size()));
         rover.setDestination(randomMineralPoint);
     }
-
-
 }
