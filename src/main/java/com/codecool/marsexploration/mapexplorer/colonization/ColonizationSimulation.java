@@ -94,9 +94,7 @@ public class ColonizationSimulation {
         newRover.setScannedCoordinates(simulation.getCommandCenter().getScannedCoordinates());
         newRover.setObjectsPoints(simulation.getCommandCenter().getObjectsPoints());
         Coordinate randomMineralPoint = newRover.getMineralPoints().get(new Random().nextInt(newRover.getMineralPoints().size()));
-        List<Coordinate> remainingMineralPoints = simulation.getCommandCenter().getMineralPoints();
-        remainingMineralPoints.remove(randomMineralPoint);
-        simulation.getCommandCenter().setMineralPoints(remainingMineralPoints);
+        simulation.getCommandCenter().getMineralPoints().remove(randomMineralPoint);
         newRover.setDestination(randomMineralPoint);
     }
 
@@ -119,9 +117,7 @@ public class ColonizationSimulation {
         rover.setRoverStatus(RoverStatus.GO_TO_RESOURCE);
         rover.createMineralPoints();
         Coordinate randomMineralPoint = rover.getMineralPoints().get(random.nextInt(rover.getMineralPoints().size()));
-        List<Coordinate> remainingMineralPoints = rover.getMineralPoints();
-        remainingMineralPoints.remove(randomMineralPoint);
-        rover.setMineralPoints(remainingMineralPoints);
+        rover.getMineralPoints().remove(randomMineralPoint);
         rover.setDestination(randomMineralPoint);
     }
 
