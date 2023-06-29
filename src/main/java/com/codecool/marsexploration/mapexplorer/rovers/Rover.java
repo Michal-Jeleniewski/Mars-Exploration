@@ -9,12 +9,12 @@ import java.util.*;
 import static com.codecool.marsexploration.mapexplorer.maploader.model.Symbol.MINERAL;
 
 public class Rover {
-    private final List<Coordinate> previousPositions;
     private static int numberOfRovers = 1;
+    private final List<Coordinate> previousPositions;
     private final String id;
-    private java.util.Map<String, Set<Coordinate>> objectsPoints;
     private final Map map;
     private final int sightRange;
+    private java.util.Map<String, Set<Coordinate>> objectsPoints;
     private Set<Coordinate> scannedCoordinates;
     private Coordinate position;
     private List<Coordinate> mineralPoints;
@@ -41,12 +41,12 @@ public class Rover {
         return previousPositions;
     }
 
-    public void setRoverStatus(RoverStatus roverStatus) {
-        this.roverStatus = roverStatus;
-    }
-
     public RoverStatus getRoverStatus() {
         return roverStatus;
+    }
+
+    public void setRoverStatus(RoverStatus roverStatus) {
+        this.roverStatus = roverStatus;
     }
 
     public Set<Coordinate> getScannedCoordinates() {
@@ -93,18 +93,10 @@ public class Rover {
     }
 
     public Coordinate findBestPositionForCommandCenter() {
-        List<Coordinate> diamondPositions = new ArrayList<>();
-
-        for (int x = 0; x < map.getRepresentation().length; x++) {
-            for (int y = 0; y < map.getRepresentation().length; y++) {
-                if (map.getByCoordinate(new Coordinate(x, y)).equals("\uD83D\uDC8E")) {
-                    diamondPositions.add(new Coordinate(x, y));
-                }
-            }
-        }
+        List<Coordinate> diamondPositions = getMineralPoints();
 
         Coordinate bestPosition = null;
-        double maxTotalDistance = 0;
+        double minTotalDistance = Double.POSITIVE_INFINITY;
 
         for (int i = 0; i < map.getRepresentation().length; i++) {
             for (int j = 0; j < map.getRepresentation().length; j++) {
@@ -116,13 +108,14 @@ public class Rover {
                     totalDistance += distance;
                 }
 
-                if (totalDistance > maxTotalDistance) {
-                    maxTotalDistance = totalDistance;
-                    bestPosition = currentPosition;
+                if (totalDistance < minTotalDistance) {
+                    minTotalDistance = totalDistance;
+                    if (map.isEmpty(currentPosition)) {
+                        bestPosition = currentPosition;
+                    }
                 }
             }
         }
-
         return bestPosition;
     }
 
@@ -136,7 +129,6 @@ public class Rover {
 
     public void createMineralPoints() {
         mineralPoints = new ArrayList<>(objectsPoints.get(MINERAL.getSymbol()).stream().toList());
-        ;
     }
 
     public List<Coordinate> getMineralPoints() {

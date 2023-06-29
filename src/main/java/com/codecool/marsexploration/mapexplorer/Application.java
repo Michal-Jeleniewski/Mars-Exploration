@@ -3,7 +3,6 @@ package com.codecool.marsexploration.mapexplorer;
 import com.codecool.marsexploration.mapexplorer.analizer.*;
 import com.codecool.marsexploration.mapexplorer.colonization.ColonizationSimulation;
 import com.codecool.marsexploration.mapexplorer.colonization.MoveToCoordinateService;
-import com.codecool.marsexploration.mapexplorer.colonization.RoverStatusManagment;
 import com.codecool.marsexploration.mapexplorer.colonization.SimpleMoveToCoordinateService;
 import com.codecool.marsexploration.mapexplorer.configuration.*;
 import com.codecool.marsexploration.mapexplorer.exploration.*;
@@ -27,7 +26,7 @@ public class Application {
     private static final String JDBC_DATABASE_URL = "jdbc:sqlite:src/main/resources/exploration.db";
 
     public static void main(String[] args) {
-        String mapFile = workDir + "/resources/exploration-0.map";
+        String mapFile = workDir + "/resources/exploration-2.map";
         Coordinate landingSpot = new Coordinate(6, 6);
         List<String> objectsToScan = List.of(MINERAL.getSymbol(), WATER.getSymbol(), MOUNTAIN.getSymbol(), PIT.getSymbol());
         int maxSteps = 1000;

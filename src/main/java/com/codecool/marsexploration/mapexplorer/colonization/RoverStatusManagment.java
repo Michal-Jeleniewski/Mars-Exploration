@@ -30,6 +30,11 @@ public class RoverStatusManagment {
         this.simulation = simulation;
     }
 
+    private static void setupRoverToExtract(Rover rover) {
+        rover.clearInventory();
+        rover.setRoverStatus(GO_TO_RESOURCE);
+    }
+
     public void goToResource() {
         List<Coordinate> randomMineralAdjacentCoordinates = CoordinateCalculatorService
                 .getAdjacentCoordinates(rover.getDestination(), simulation.getMap().getDimension());
@@ -53,10 +58,22 @@ public class RoverStatusManagment {
     }
 
     public void buildBase() {
-        simulation.setCommandCenter(new CommandCenter(getNewCommandCenterCoordinate(rover), rover.getMineralPoints(), rover.getObjectsPoints(), rover.getScannedCoordinates()));
-        rover.clearInventory();
-        rover.saveObjectPoint(simulation.getCommandCenter().getCommandCenterPosition(), Symbol.BASE.getSymbol());
-        rover.setRoverStatus(GO_TO_RESOURCE);
+        Coordinate newBaseCoordinate = rover.findBestPositionForCommandCenter();
+        System.out.println(newBaseCoordinate);
+        rover.setDestination(newBaseCoordinate);
+        if (CoordinateCalculatorService.getAdjacentCoordinates(newBaseCoordinate, simulation.getMap().getDimension()).contains(rover.getPosition())) {
+            simulation.setCommandCenter(new CommandCenter(newBaseCoordinate, rover.getMineralPoints(), rover.getObjectsPoints(), rover.getScannedCoordinates()));
+            rover.clearInventory();
+            rover.saveObjectPoint(simulation.getCommandCenter().getCommandCenterPosition(), Symbol.BASE.getSymbol());
+            Coordinate randomMineralPoint = rover.getMineralPoints().get(new Random().nextInt(rover.getMineralPoints().size()));
+            simulation.getCommandCenter().getMineralPoints().remove(randomMineralPoint);
+            rover.setDestination(randomMineralPoint);
+            rover.setRoverStatus(GO_TO_RESOURCE);
+        }
+        else {
+            moveToCoordinateService.moveToCoordinate(newBaseCoordinate, rover);
+        }
+
     }
 
     public void goToBase() {
@@ -87,10 +104,5 @@ public class RoverStatusManagment {
                 filter(simulation.getMap()::isEmpty)
                 .toList();
         return freeRoverAdjacentCoordinates.get(new Random().nextInt(freeRoverAdjacentCoordinates.size()));
-    }
-
-    private static void setupRoverToExtract(Rover rover) {
-        rover.clearInventory();
-        rover.setRoverStatus(GO_TO_RESOURCE);
     }
 }

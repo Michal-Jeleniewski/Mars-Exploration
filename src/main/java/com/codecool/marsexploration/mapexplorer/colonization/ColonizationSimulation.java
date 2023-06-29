@@ -117,7 +117,6 @@ public class ColonizationSimulation {
         rover.setRoverStatus(RoverStatus.GO_TO_RESOURCE);
         rover.createMineralPoints();
         Coordinate randomMineralPoint = rover.getMineralPoints().get(random.nextInt(rover.getMineralPoints().size()));
-        rover.getMineralPoints().remove(randomMineralPoint);
         rover.setDestination(randomMineralPoint);
     }
 
