@@ -21,6 +21,8 @@ public class CommandCenter {
     private int mineralsOnStock;
     private final java.util.Map<String, Set<Coordinate>> objectsPoints;
     private final Set<Coordinate> scannedCoordinates;
+    private int createdRovers;
+    private int totalMineralsCollected;
 
     public CommandCenter(Coordinate commandCenterPosition, List<Coordinate> mineralPoints, Map<String, Set<Coordinate>> objectsPoints, Set<Coordinate> scannedCoordinates) {
         this.mineralPoints = mineralPoints;
@@ -30,6 +32,8 @@ public class CommandCenter {
         this.commandCenterPosition = commandCenterPosition;
         this.baseStatus = WAITING_FOR_RESOURCES;
         this.mineralsOnStock = 0;
+        this.createdRovers = 0;
+        this.totalMineralsCollected = 0;
         numberOfBases++;
     }
 
@@ -41,8 +45,25 @@ public class CommandCenter {
         return mineralsOnStock;
     }
 
+    public int getTotalMineralsCollected() {
+        return totalMineralsCollected;
+    }
+
     public void addMineral() {
+        totalMineralsCollected++;
         mineralsOnStock++;
+    }
+
+    public int getCreatedRovers() {
+        return createdRovers;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void updateCreatedRovers() {
+        createdRovers = createdRovers + 1;
     }
 
     public void decreaseMineralStock(int amount) {

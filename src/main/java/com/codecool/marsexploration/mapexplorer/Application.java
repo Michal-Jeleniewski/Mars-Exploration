@@ -12,7 +12,7 @@ import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoaderImpl;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Map;
-import com.codecool.marsexploration.mapexplorer.repository.ExplorationsRepository;
+import com.codecool.marsexploration.mapexplorer.repository.*;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 import com.codecool.marsexploration.mapexplorer.rovers.RoverPlacement;
 
@@ -59,7 +59,13 @@ public class Application {
         ExplorationResultDisplay explorationResultDisplay = new ExplorationResultDisplay(map.getDimension());
 
         ExplorationsRepository explorationsRepository = new ExplorationsRepository(JDBC_DATABASE_URL);
-        explorationsRepository.createTableIfDoesNotExist();
+        ColonizationRepository colonizationRepository = new ColonizationRepository(JDBC_DATABASE_URL);
+        RoversRepository roversRepository = new RoversRepository(JDBC_DATABASE_URL);
+        CommandCenterRepository commandCenterRepository = new CommandCenterRepository(JDBC_DATABASE_URL);
+        List<Repository> repositories = List.of(
+                explorationsRepository, colonizationRepository, commandCenterRepository, roversRepository
+        );
+        createTablesIfDoesNotExist(repositories);
 
         ExplorationSimulator explorationSimulator = new ExplorationSimulator(explorationResultDisplay, mapLoader, movementService, allOutcomeAnalyzer, logger, explorationsRepository);
 
@@ -68,11 +74,16 @@ public class Application {
             Simulation simulation = explorationSimulator.runSimulation(configurationParameters, rovers);
             if (simulation.explorationOutcome() == ExplorationOutcome.COLONIZABLE) {
                 MoveToCoordinateService moveToCoordinateService = new SimpleMoveToCoordinateService();
-                ColonizationSimulation colonizationSimulation = new ColonizationSimulation(explorationResultDisplay, simulation, configurationParameters, moveToCoordinateService);
+                ColonizationSimulation colonizationSimulation = new ColonizationSimulation(explorationResultDisplay, simulation, configurationParameters, moveToCoordinateService, colonizationRepository, commandCenterRepository, roversRepository);
                 colonizationSimulation.runColonization();
             }
         } else {
             System.out.println("Configuration validation failed. Simulation will not run.");
+        }
+    }
+    public static void createTablesIfDoesNotExist(List<Repository> repositories){
+        for(Repository repository : repositories){
+            repository.createTableIfDoesNotExist();
         }
     }
 }

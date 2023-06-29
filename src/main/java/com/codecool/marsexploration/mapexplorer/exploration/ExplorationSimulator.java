@@ -6,6 +6,7 @@ import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.repository.ExplorationsDto;
 import com.codecool.marsexploration.mapexplorer.repository.ExplorationsRepository;
+import com.codecool.marsexploration.mapexplorer.repository.Repository;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 
 import java.util.List;
@@ -59,7 +60,8 @@ public class ExplorationSimulator {
             if (explorationOutcome != null) {
                 int numberOfResources = rovers.get(0).getObjectsPoints().values().stream().mapToInt(Set::size).sum();
                 ExplorationsDto explorationsDto = new ExplorationsDto(simulation.numberOfSteps(), numberOfResources, explorationOutcome);
-                explorationsRepository.saveInDatabase(explorationsDto);
+                explorationsRepository.setExplorationsDto(explorationsDto);
+                explorationsRepository.saveInDatabase();
                 simulation.setExplorationOutcome(explorationOutcome);
             }
 

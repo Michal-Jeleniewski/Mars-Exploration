@@ -21,6 +21,7 @@ public class Rover {
     private RoverStatus roverStatus;
     private String[] resourceInventory = new String[1];
     private Coordinate destination;
+    private int collectedResources;
 
 
     public Rover(Coordinate position, int sightRange, Map map) {
@@ -32,7 +33,8 @@ public class Rover {
         previousPositions = new ArrayList<>();
         scannedCoordinates = new HashSet<>();
         mineralPoints = null;
-        roverStatus = RoverStatus.EXPLORE;
+        this.roverStatus = RoverStatus.EXPLORE;
+        this.collectedResources = 0;
         numberOfRovers++;
     }
 
@@ -160,6 +162,7 @@ public class Rover {
 
     public void addToResourceInventory(Coordinate randomMineralPoint) {
         resourceInventory[0] = map.getByCoordinate(randomMineralPoint);
+        collectedResources++;
     }
 
     public String[] getResourceInventory() {
@@ -168,6 +171,10 @@ public class Rover {
 
     public Coordinate getDestination() {
         return destination;
+    }
+
+    public int getCollectedResources() {
+        return collectedResources;
     }
 
     public void setDestination(Coordinate destination) {
