@@ -80,6 +80,7 @@ public class ColonizationSimulation {
                 simulation.getCommandCenter().decreaseMineralStock(MINERALS_NEEDED_FOR_NEW_ROVER);
                 setupNewRower(newRover);
                 simulation.addRover(newRover);
+                simulation.getCommandCenter().addCreatedRovers();
             }
             simulationStepsLogging.logSteps();
 

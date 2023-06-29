@@ -6,39 +6,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.codecool.marsexploration.mapexplorer.commandCenter.BaseStatus.*;
-
 public class CommandCenter {
     private static int numberOfBases = 1;
     private final String id;
-
     private final Coordinate commandCenterPosition;
-
-    private BaseStatus baseStatus;
-
-    private List<Coordinate> mineralPoints;
-
-    private int mineralsOnStock;
+    private final List<Coordinate> mineralPoints;
     private final java.util.Map<String, Set<Coordinate>> objectsPoints;
     private final Set<Coordinate> scannedCoordinates;
+    private int mineralsOnStock;
     private int createdRovers;
     private int totalMineralsCollected;
-
     public CommandCenter(Coordinate commandCenterPosition, List<Coordinate> mineralPoints, Map<String, Set<Coordinate>> objectsPoints, Set<Coordinate> scannedCoordinates) {
         this.mineralPoints = mineralPoints;
         this.objectsPoints = objectsPoints;
         this.scannedCoordinates = scannedCoordinates;
         this.id = String.valueOf(numberOfBases);
         this.commandCenterPosition = commandCenterPosition;
-        this.baseStatus = WAITING_FOR_RESOURCES;
         this.mineralsOnStock = 0;
         this.createdRovers = 0;
         this.totalMineralsCollected = 0;
         numberOfBases++;
-    }
-
-    public void setMineralPoints(List<Coordinate> mineralPoints) {
-        this.mineralPoints = mineralPoints;
     }
 
     public Coordinate getCommandCenterPosition() {
@@ -62,12 +49,12 @@ public class CommandCenter {
         return createdRovers;
     }
 
-    public String getId() {
-        return id;
+    public void addCreatedRovers() {
+        this.createdRovers = getCreatedRovers() + 1;
     }
 
-    public void updateCreatedRovers() {
-        createdRovers = createdRovers + 1;
+    public String getId() {
+        return id;
     }
 
     public void decreaseMineralStock(int amount) {

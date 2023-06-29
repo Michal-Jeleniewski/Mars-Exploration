@@ -1,7 +1,6 @@
 package com.codecool.marsexploration.mapexplorer.repository;
 
 import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
-import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 
 import java.sql.*;
 

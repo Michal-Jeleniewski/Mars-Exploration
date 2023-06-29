@@ -6,7 +6,6 @@ import com.codecool.marsexploration.mapexplorer.logger.Logger;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
 import com.codecool.marsexploration.mapexplorer.repository.ExplorationsDto;
 import com.codecool.marsexploration.mapexplorer.repository.ExplorationsRepository;
-import com.codecool.marsexploration.mapexplorer.repository.Repository;
 import com.codecool.marsexploration.mapexplorer.rovers.Rover;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public class ExplorationSimulator {
     private final AllOutcomeAnalyzer allOutcomeAnalyzer;
     private final Logger logger;
     private final ExplorationsRepository explorationsRepository;
-    private MovementService movementService;
+    private final MovementService movementService;
 
     public ExplorationSimulator(ExplorationResultDisplay explorationResultDisplay,
                                 MapLoader mapLoader,

@@ -30,11 +30,6 @@ public class RoverStatusManagement {
         this.simulation = simulation;
     }
 
-    private static void setupRoverToExtract(Rover rover) {
-        rover.clearInventory();
-        rover.setRoverStatus(GO_TO_RESOURCE);
-    }
-
     public void goToResource() {
         List<Coordinate> randomMineralAdjacentCoordinates = CoordinateCalculatorService
                 .getAdjacentCoordinates(rover.getDestination(), simulation.getMap().getDimension());
@@ -83,12 +78,12 @@ public class RoverStatusManagement {
         List<Coordinate> baseAdjacentCoordinates = CoordinateCalculatorService
                 .getAdjacentCoordinates(simulation.getCommandCenter().getCommandCenterPosition(), simulation.getMap().getDimension());
 
-        configurationParameters.symbols().forEach(rover::checkForObjectsAround);
-        rover.addScannedCoordinates();
         if (baseAdjacentCoordinates.contains(rover.getPosition())) {
             rover.setRoverStatus(DEPOSIT_RESOURCE);
         } else {
             moveToCoordinateService.moveToCoordinate(simulation.getCommandCenter().getCommandCenterPosition(), rover);
+            configurationParameters.symbols().forEach(rover::checkForObjectsAround);
+            rover.addScannedCoordinates();
         }
     }
 
@@ -97,7 +92,12 @@ public class RoverStatusManagement {
         setupRoverToExtract(rover);
     }
 
-    private void extractMineral(Rover rover, Coordinate randomMineralPoint) {
-        rover.addToResourceInventory(randomMineralPoint);
+    private void setupRoverToExtract(Rover rover) {
+        rover.clearInventory();
+        rover.setRoverStatus(GO_TO_RESOURCE);
+    }
+
+    private void extractMineral(Rover rover, Coordinate mineralPoint) {
+        rover.addToResourceInventory(mineralPoint);
     }
 }

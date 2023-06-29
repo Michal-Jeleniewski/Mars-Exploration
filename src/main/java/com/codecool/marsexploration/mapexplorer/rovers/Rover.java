@@ -158,10 +158,6 @@ public class Rover {
         collectedResources++;
     }
 
-    public String[] getResourceInventory() {
-        return resourceInventory;
-    }
-
     public Coordinate getDestination() {
         return destination;
     }

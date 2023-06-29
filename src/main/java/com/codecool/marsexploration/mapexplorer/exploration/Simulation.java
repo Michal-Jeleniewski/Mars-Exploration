@@ -50,16 +50,8 @@ public class Simulation {
         rovers.add(rover);
     }
 
-    public Coordinate getSpaceshipCoordinate() {
-        return spaceshipCoordinate;
-    }
-
     public Map getMap() {
         return map;
-    }
-
-    public List<String> resourcesToMonitor() {
-        return resourcesToMonitor;
     }
 
     public ExplorationOutcome explorationOutcome() {
